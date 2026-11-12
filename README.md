@@ -1,2063 +1,2691 @@
 
 ==================================================
-PROGRAM 1: BINARIES, LIBRARIES AND MAKEFILE
-(Original Question)
+QUESTION 1: EUCLIDEAN ALGORITHM, EXTENDED EUCLIDEAN
+ALGORITHM AND MODULAR OPERATIONS
 ==================================================
 
+FULL QUESTION:
+Implement a Python program for Euclidean Algorithm, extended version, and mod operations to solve a real-world cryptography problem.
+
 AIM:
-To study binaries, static libraries, dynamic libraries and Makefile.
+To implement Euclidean and Extended Euclidean algorithms and calculate modular operations using Python.
 
 PROCEDURE:
-1. Create a C program.
-2. Create a static library.
-3. Create a shared library.
-4. Compile and link the program.
-5. Execute and verify the output.
+1. Import the required functions.
+2. Get two integer values.
+3. Calculate GCD using Euclidean algorithm.
+4. Calculate modular inverse using Extended Euclidean algorithm.
+5. Display the results.
 
 PROGRAM:
 
-File: hello.c
+a = 17
+b = 5
+m = 26
 
-#include <stdio.h>
+# Euclidean Algorithm
+x = a
+y = b
 
-void hello()
-{
-    printf("Hello from Library\n");
-}
+while y != 0:
+    x, y = y, x % y
 
+print("GCD =", x)
 
-File: main.c
+# Modular Inverse
+if x == 1:
+    inverse = pow(a, -1, m)
+    print("Modular Inverse =", inverse)
 
-void hello();
-
-int main()
-{
-    hello();
-    return 0;
-}
-
-
-Create static library:
-
-gcc -c hello.c
-ar rcs libhello.a hello.o
-gcc main.c ./libhello.a -o static_app
-./static_app
-
-
-Create shared library:
-
-gcc -fPIC -c hello.c
-gcc -shared hello.o -o libhello.so
-gcc main.c -L. -lhello -o dynamic_app
-LD_LIBRARY_PATH=. ./dynamic_app
-
+# Modular Operation
+print("Modular Addition =", (a + b) % m)
+print("Modular Multiplication =", (a * b) % m)
 
 OUTPUT:
 
-Hello from Library
+GCD = 1
+Modular Inverse = 23
+Modular Addition = 22
+Modular Multiplication = 7
 
 RESULT:
-Thus, static and dynamic libraries were successfully created and executed.
+Thus, Euclidean algorithm, Extended Euclidean algorithm and modular operations were successfully implemented.
 
 
 ==================================================
-PROGRAM 2: DAC IN LINUX
-(Original Question)
+QUESTION 2: FERMAT AND EULER THEOREMS
 ==================================================
+
+FULL QUESTION:
+Implement Fermat and Euler's Theorem. Verify the theorems and apply them for finding modular inverse using Python Program.
 
 AIM:
-To implement Discretionary Access Control in Linux.
+To verify Fermat's Little Theorem and Euler's Theorem and calculate modular inverse.
 
 PROCEDURE:
-1. Create a file.
-2. Create a user.
-3. Change file ownership.
-4. Set file permissions.
-5. Verify the permissions.
+1. Get values of a, p and n.
+2. Verify Fermat's theorem.
+3. Calculate Euler's totient function.
+4. Verify Euler's theorem.
+5. Calculate the modular inverse.
 
 PROGRAM:
 
-sudo useradd user1
+import math
 
-sudo touch sample.txt
+a = 3
+p = 7
+n = 10
 
-sudo chown user1:user1 sample.txt
+# Fermat's Little Theorem
+print("Fermat:", pow(a, p-1, p) == 1)
 
-sudo chmod 640 sample.txt
+# Euler's Theorem
+phi = sum(1 for i in range(1, n+1)
+          if math.gcd(i, n) == 1)
 
-ls -l sample.txt
+print("Euler:", pow(a, phi, n) == 1)
+
+# Modular Inverse
+inverse = pow(a, -1, n)
+
+print("Modular Inverse =", inverse)
 
 OUTPUT:
 
--rw-r----- 1 user1 user1 0 sample.txt
+Fermat: True
+Euler: True
+Modular Inverse = 7
 
 RESULT:
-Thus, DAC was successfully implemented using Linux file permissions.
+Thus, Fermat's and Euler's theorems were verified and modular inverse was calculated successfully.
 
 
 ==================================================
-PROGRAM 3: DAC IN MYSQL
-(Original Question)
+QUESTION 3: FERMAT AND MILLER-RABIN PRIMALITY TESTS
 ==================================================
+
+FULL QUESTION:
+Implement Fermat and Miller-Rabin probabilistic primality tests using Python Program.
 
 AIM:
-To implement Discretionary Access Control in MySQL.
+To check whether a number is prime using Fermat and Miller-Rabin tests.
 
 PROCEDURE:
-1. Open MySQL.
-2. Create a database.
-3. Create a user.
-4. Grant database permissions.
-5. Verify and revoke permissions.
+1. Import the random module.
+2. Get an integer value.
+3. Perform Fermat primality testing.
+4. Perform Miller-Rabin primality testing.
+5. Display whether the number is probably prime or composite.
 
 PROGRAM:
 
-CREATE DATABASE college;
+import random
 
-USE college;
+def fermat(n):
+    if n < 4:
+        return n in (2, 3)
 
-CREATE TABLE student (
-    id INT,
-    name VARCHAR(30)
-);
+    for i in range(5):
+        a = random.randint(2, n-2)
 
-INSERT INTO student VALUES
-(1, 'Arun');
+        if pow(a, n-1, n) != 1:
+            return False
 
-CREATE USER 'user1'@'localhost'
-IDENTIFIED BY 'pass123';
-
-GRANT SELECT, INSERT
-ON college.student
-TO 'user1'@'localhost';
-
-SHOW GRANTS FOR 'user1'@'localhost';
-
-REVOKE INSERT
-ON college.student
-FROM 'user1'@'localhost';
-
-SHOW GRANTS FOR 'user1'@'localhost';
+    return True
 
 
-OUTPUT:
+def miller(n):
+    if n < 4:
+        return n in (2, 3)
 
-Database created successfully.
-Table created successfully.
-User created successfully.
-SELECT and INSERT permissions granted.
-INSERT permission revoked.
+    d = n - 1
+    s = 0
 
-RESULT:
-Thus, DAC was successfully implemented in MySQL using GRANT and REVOKE.
+    while d % 2 == 0:
+        d //= 2
+        s += 1
+
+    for i in range(5):
+        a = random.randint(2, n-2)
+        x = pow(a, d, n)
+
+        if x == 1 or x == n-1:
+            continue
+
+        for j in range(s-1):
+            x = pow(x, 2, n)
+
+            if x == n-1:
+                break
+        else:
+            return False
+
+    return True
 
 
-==================================================
-PROGRAM 4: RESUME WEB PAGE
-(Original Question)
-==================================================
+n = 17
 
-AIM:
-To create a personal resume webpage using HTML.
-
-PROCEDURE:
-1. Open a text editor.
-2. Create an HTML file.
-3. Add personal information.
-4. Add education and skills.
-5. Open the file in a browser.
-
-PROGRAM:
-
-<!DOCTYPE html>
-<html>
-<head>
-<title>My Resume</title>
-</head>
-
-<body>
-
-<h1>MY RESUME</h1>
-
-<h2>Personal Details</h2>
-
-<p>Name: Arun Kumar</p>
-<p>Email: arun@gmail.com</p>
-<p>Phone: 9876543210</p>
-
-<h2>Education</h2>
-
-<p>BE Computer Science</p>
-<p>HSC - 2024</p>
-
-<h2>Technical Skills</h2>
-
-<ul>
-<li>Python</li>
-<li>Linux</li>
-<li>HTML</li>
-<li>Cyber Security</li>
-</ul>
-
-<h2>Experience</h2>
-
-<p>Fresher</p>
-
-</body>
-</html>
-
+print("Fermat:", fermat(n))
+print("Miller-Rabin:", miller(n))
 
 OUTPUT:
 
-A resume webpage is displayed containing:
-
-Name: Arun Kumar
-Email: arun@gmail.com
-Education: BE Computer Science
-Skills: Python, Linux, HTML, Cyber Security
-Experience: Fresher
+Fermat: True
+Miller-Rabin: True
 
 RESULT:
-Thus, a personal resume webpage was successfully created.
-
-
-==================================================
-PROGRAM 5: LINUX VIRTUALIZATION USING CHROOT
-(Original Question)
-==================================================
-
-AIM:
-To implement Linux virtualization using the chroot mechanism.
-
-PROCEDURE:
-1. Create a root directory.
-2. Create the required directories.
-3. Copy the Bash shell.
-4. Copy its required libraries.
-5. Enter the isolated environment.
-
-PROGRAM:
-
-sudo mkdir -p /myroot/bin
-sudo mkdir -p /myroot/lib
-sudo mkdir -p /myroot/lib64
-
-Copy Bash:
-
-sudo cp /bin/bash /myroot/bin/
-
-Check libraries:
-
-ldd /bin/bash
-
-Copy the required library files shown by ldd into their matching directories under /myroot.
-
-Enter the environment:
-
-sudo chroot /myroot /bin/bash
-
-Execute:
-
-echo "Welcome to Chroot"
-
-pwd
-
-exit
-
-
-OUTPUT:
-
-Welcome to Chroot
-/
-
-RESULT:
-Thus, a basic isolated Linux environment was created using chroot.
+Thus, Fermat and Miller-Rabin primality tests were implemented successfully.
 
 NOTE:
-Copy all dependencies reported by ldd. Chroot provides filesystem isolation, not complete virtualization.
+Both tests are probabilistic. Miller-Rabin is generally more reliable. Use sufficiently many rounds for large numbers.
 
 
 ==================================================
-PROGRAM 6: MAC USING SELINUX / APPARMOR
-(Original Question)
+QUESTION 4: CHINESE REMAINDER THEOREM
 ==================================================
+
+FULL QUESTION:
+Implement a Python program for a system of congruences using Chinese Remainder Theorem.
 
 AIM:
-To implement Mandatory Access Control using AppArmor.
+To solve a system of simultaneous congruences using CRT.
 
 PROCEDURE:
-1. Check AppArmor installation.
-2. Check its service status.
-3. Create an application profile.
-4. Define file access permissions.
-5. Enable enforce mode.
+1. Define the remainders.
+2. Define the moduli.
+3. Calculate the product of moduli.
+4. Calculate the modular inverses.
+5. Display the final solution.
 
 PROGRAM:
 
-Check status:
+from functools import reduce
 
-sudo aa-status
+remainders = [2, 3, 2]
+moduli = [3, 5, 7]
 
-Create profile:
+M = reduce(lambda x, y: x*y, moduli)
 
-sudo nano /etc/apparmor.d/usr.bin.testapp
+result = 0
 
-Enter:
+for a, m in zip(remainders, moduli):
+    Mi = M // m
+    inverse = pow(Mi, -1, m)
+    result += a * Mi * inverse
 
-#include <tunables/global>
+result = result % M
 
-/usr/bin/testapp {
-    #include <abstractions/base>
+print("Solution =", result)
 
-    /usr/bin/testapp mr,
-    /etc/testapp.conf r,
-    /tmp/testapp.log w,
-}
-
-Save the file.
-
-Load profile:
-
-sudo apparmor_parser -r /etc/apparmor.d/usr.bin.testapp
-
-Enable enforcement:
-
-sudo aa-enforce /etc/apparmor.d/usr.bin.testapp
-
-Check:
-
-sudo aa-status
-
+for a, m in zip(remainders, moduli):
+    print(result, "%", m, "=", result % m)
 
 OUTPUT:
 
-AppArmor is loaded.
-Profile is loaded.
-Profile mode: enforce.
+Solution = 23
+23 % 3 = 2
+23 % 5 = 3
+23 % 7 = 2
 
 RESULT:
-Thus, MAC was implemented using AppArmor security policies.
+Thus, the system of congruences was successfully solved using Chinese Remainder Theorem.
 
 
 ==================================================
-PROGRAM 7: VIRTUAL PRIVATE DATABASE (ORACLE)
-(Original Question)
+QUESTION 5: SCHNORR IDENTIFICATION PROTOCOL
 ==================================================
+
+FULL QUESTION:
+Implement Schnorr Identification Protocol using Python Program.
 
 AIM:
-To implement Virtual Private Database security using Oracle Label Security.
+To implement the Schnorr identification protocol for user authentication.
 
 PROCEDURE:
-1. Connect to Oracle.
-2. Create an employee table.
-3. Insert employee records.
-4. Create security labels.
-5. Apply security restrictions.
+1. Select prime numbers and a generator.
+2. Generate the prover's private and public keys.
+3. Generate a random commitment.
+4. Calculate the challenge and response.
+5. Verify the response.
 
 PROGRAM:
 
-CREATE TABLE employee (
-    id NUMBER,
-    name VARCHAR2(30),
-    department VARCHAR2(20)
-);
+import secrets
 
-INSERT INTO employee VALUES
-(1, 'Arun', 'IT');
+p = 23
+q = 11
+g = 2
 
-INSERT INTO employee VALUES
-(2, 'Kumar', 'HR');
+# Private key
+x = 3
 
-COMMIT;
+# Public key
+y = pow(g, x, p)
 
-Create a simple VPD policy function:
+# Commitment
+r = secrets.randbelow(q-1) + 1
+t = pow(g, r, p)
 
-CREATE OR REPLACE FUNCTION dept_policy(
-    schema_name VARCHAR2,
-    table_name VARCHAR2
-)
-RETURN VARCHAR2
-AS
-BEGIN
-    RETURN
-    'department = SYS_CONTEXT(''USERENV'', ''CLIENT_IDENTIFIER'')';
-END;
-/
+# Challenge
+e = 4
 
-Add policy:
+# Response
+s = (r + e*x) % q
 
-BEGIN
-    DBMS_RLS.ADD_POLICY(
-        object_schema => USER,
-        object_name => 'EMPLOYEE',
-        policy_name => 'DEPT_POLICY',
-        function_schema => USER,
-        policy_function => 'DEPT_POLICY',
-        statement_types => 'SELECT'
-    );
-END;
-/
+# Verification
+left = pow(g, s, p)
+right = (t * pow(y, e, p)) % p
 
-Set department:
+print("Public Key =", y)
+print("Commitment =", t)
+print("Response =", s)
 
-EXEC DBMS_SESSION.SET_IDENTIFIER('IT');
-
-SELECT * FROM employee;
-
+print("Authentication:",
+      left == right)
 
 OUTPUT:
 
-ID    NAME    DEPARTMENT
-1     Arun    IT
+Public Key = 8
+Commitment = (Random value)
+Response = (Calculated value)
+Authentication = True
 
 RESULT:
-Thus, department-based data access was restricted using Oracle VPD.
+Thus, Schnorr Identification Protocol was successfully implemented.
 
 NOTE:
-This program demonstrates Oracle VPD using DBMS_RLS, not Oracle Label Security. Oracle Label Security requires separate label and policy configuration.
+This is a simplified educational demonstration with a fixed challenge. A real protocol requires a fresh unpredictable challenge and suitable cryptographic parameters.
 
 
 ==================================================
-PROGRAM 8: MERKLE TREE AND ONE-TIME SIGNATURE
-(Original Question)
+QUESTION 6: FEIGE-FIAT-SHAMIR IDENTIFICATION PROTOCOL
 ==================================================
+
+FULL QUESTION:
+Implement Feige-Fiat-Shamir Identification Protocol using Python Program.
 
 AIM:
-To implement an authentication tree and one-time signature using Python.
+To implement the Feige-Fiat-Shamir identification protocol for authentication.
 
 PROCEDURE:
-1. Import hashlib.
-2. Create sample messages.
-3. Generate message hashes.
-4. Construct the Merkle tree.
-5. Generate and verify a one-time signature.
+1. Select two prime numbers.
+2. Calculate the modulus.
+3. Generate private and public values.
+4. Generate a random commitment and challenge.
+5. Verify the prover's response.
+
+PROGRAM:
+
+import secrets
+
+p = 7
+q = 11
+n = p * q
+
+# Private key
+s = 3
+
+# Public key
+v = pow(s, 2, n)
+
+# Random value
+r = 2
+
+# Commitment
+x = pow(r, 2, n)
+
+# Challenge
+e = 1
+
+# Response
+y = (r * pow(s, e, n)) % n
+
+# Verification
+check = (pow(y, 2, n) ==
+         (x * pow(v, e, n)) % n)
+
+print("Modulus =", n)
+print("Public Key =", v)
+print("Commitment =", x)
+print("Response =", y)
+print("Authentication =", check)
+
+OUTPUT:
+
+Modulus = 77
+Public Key = 9
+Commitment = 4
+Response = 6
+Authentication = True
+
+RESULT:
+Thus, Feige-Fiat-Shamir identification protocol was successfully implemented.
+
+NOTE:
+This is a single-round educational example. Production protocols require multiple rounds and carefully generated keys.
+
+
+==================================================
+QUESTION 7: DIGITAL SIGNATURE AND VERIFICATION
+==================================================
+
+FULL QUESTION:
+Implement Digital Signature and verify the Signature using Python Program.
+
+AIM:
+To create and verify a digital signature using RSA.
+
+PROCEDURE:
+1. Select RSA prime numbers.
+2. Generate public and private keys.
+3. Create a message.
+4. Sign the message using the private key.
+5. Verify the signature using the public key.
+
+PROGRAM:
+
+import hashlib
+
+p = 61
+q = 53
+
+n = p * q
+phi = (p-1) * (q-1)
+
+e = 17
+d = pow(e, -1, phi)
+
+message = "Hello Student"
+
+h = int(hashlib.sha256(
+    message.encode()).hexdigest(), 16) % n
+
+signature = pow(h, d, n)
+
+verified = pow(signature, e, n) == h
+
+print("Message =", message)
+print("Signature =", signature)
+print("Verification =", verified)
+
+OUTPUT:
+
+Message = Hello Student
+Signature = (Integer value)
+Verification = True
+
+RESULT:
+Thus, RSA digital signature was created and verified successfully.
+
+NOTE:
+This is a small-number RSA demonstration, not secure for real-world signing. Use RSA-PSS with a cryptographic library in practical applications.
+
+
+==================================================
+QUESTION 8: ELGAMAL SIGNATURE SCHEME
+==================================================
+
+FULL QUESTION:
+Implement Elgamal Signature Scheme using Python Program.
+
+AIM:
+To generate and verify a digital signature using ElGamal.
+
+PROCEDURE:
+1. Select a prime number and generator.
+2. Generate private and public keys.
+3. Select a random signing value.
+4. Generate the digital signature.
+5. Verify the signature.
+
+PROGRAM:
+
+import hashlib
+import math
+
+p = 23
+g = 5
+
+# Private key
+x = 6
+
+# Public key
+y = pow(g, x, p)
+
+message = "HELLO"
+
+h = int(hashlib.sha256(
+    message.encode()).hexdigest(), 16) % (p-1)
+
+# Random signing value
+k = 7
+
+while math.gcd(k, p-1) != 1:
+    k += 1
+
+r = pow(g, k, p)
+
+k_inv = pow(k, -1, p-1)
+
+s = (k_inv * (h-x*r)) % (p-1)
+
+left = pow(g, h, p)
+right = (pow(y, r, p) * pow(r, s, p)) % p
+
+print("Public Key =", y)
+print("Signature =", r, s)
+print("Verified =", left == right)
+
+OUTPUT:
+
+Public Key = 8
+Signature = (r value) (s value)
+Verified = True
+
+RESULT:
+Thus, ElGamal digital signature was generated and verified successfully.
+
+NOTE:
+Use fresh, secret signing nonces for every signature. This small-parameter program is for learning only.
+
+
+==================================================
+QUESTION 9: ELLIPTIC CURVE CRYPTOSYSTEM
+==================================================
+
+FULL QUESTION:
+Implement Elliptic Curve Cryptosystem using Python Program.
+
+AIM:
+To demonstrate elliptic curve point operations and key generation.
+
+PROCEDURE:
+1. Define an elliptic curve.
+2. Select a base point.
+3. Generate a private key.
+4. Calculate the public key.
+5. Verify the generated public key.
+
+PROGRAM:
+
+p = 17
+a = 2
+b = 2
+
+G = (5, 1)
+
+def add(P, Q):
+
+    if P is None:
+        return Q
+
+    if Q is None:
+        return P
+
+    x1, y1 = P
+    x2, y2 = Q
+
+    if x1 == x2 and (y1+y2) % p == 0:
+        return None
+
+    if P == Q:
+        m = ((3*x1*x1+a) *
+             pow(2*y1, -1, p)) % p
+    else:
+        m = ((y2-y1) *
+             pow(x2-x1, -1, p)) % p
+
+    x3 = (m*m-x1-x2) % p
+    y3 = (m*(x1-x3)-y1) % p
+
+    return (x3, y3)
+
+
+def multiply(k, P):
+
+    result = None
+
+    while k:
+        if k & 1:
+            result = add(result, P)
+
+        P = add(P, P)
+        k >>= 1
+
+    return result
+
+
+private = 3
+public = multiply(private, G)
+
+print("Private Key =", private)
+print("Public Key =", public)
+
+OUTPUT:
+
+Private Key = 3
+Public Key = (10, 6)
+
+RESULT:
+Thus, elliptic curve point multiplication and public key generation were successfully implemented.
+
+NOTE:
+This is a toy ECC demonstration, not a complete secure ECIES encryption implementation.
+
+
+==================================================
+QUESTION 10: IDENTIFICATION PROTOCOL
+==================================================
+
+FULL QUESTION:
+Implement any one identification protocol using Python program.
+
+AIM:
+To implement a simple challenge-response identification protocol.
+
+PROCEDURE:
+1. Define a shared secret.
+2. Generate a random challenge.
+3. Calculate the response.
+4. Verify the response.
+5. Display authentication status.
 
 PROGRAM:
 
 import hashlib
 import secrets
 
-def H(data):
-    return hashlib.sha256(data).digest()
+secret = "mysecret"
 
-# Merkle tree
+challenge = secrets.token_hex(8)
 
-messages = [
-    b"Message1",
-    b"Message2",
-    b"Message3",
-    b"Message4"
-]
+response = hashlib.sha256(
+    (secret + challenge).encode()
+).hexdigest()
 
-level = [H(m) for m in messages]
+# Verifier calculates expected response
+expected = hashlib.sha256(
+    (secret + challenge).encode()
+).hexdigest()
 
-while len(level) > 1:
-    level = [
-        H(level[i] + level[i+1])
-        for i in range(0, len(level), 2)
-    ]
+print("Challenge =", challenge)
+print("Response =", response)
 
-print("Merkle Root:", level[0].hex()[:16])
-
-# Lamport signature
-
-private = [
-    [secrets.token_bytes(32) for _ in range(2)]
-    for i in range(256)
-]
-
-public = [
-    [H(x[0]), H(x[1])]
-    for x in private
-]
-
-message = b"Hello"
-digest = H(message)
-
-signature = []
-
-for i in range(256):
-    bit = (digest[i//8] >> (7-i%8)) & 1
-    signature.append(private[i][bit])
-
-valid = True
-
-for i in range(256):
-    bit = (digest[i//8] >> (7-i%8)) & 1
-
-    if H(signature[i]) != public[i][bit]:
-        valid = False
-        break
-
-print("Signature Valid:", valid)
-
-
-OUTPUT:
-
-Merkle Root: (Hash value)
-Signature Valid: True
-
-RESULT:
-Thus, a Merkle tree and Lamport one-time signature were implemented successfully.
-
-NOTE:
-A Lamport key must never be reused. Full Merkle authentication also requires authentication paths and verification against the root.
-
-
-==================================================
-PROGRAM 9: METASPLOIT FRAMEWORK
-(Original Question)
-==================================================
-
-AIM:
-To identify vulnerabilities using Metasploit in an authorized lab.
-
-PROCEDURE:
-1. Open Kali Linux.
-2. Start Metasploit.
-3. Search for auxiliary modules.
-4. Select a scanner module.
-5. Scan the authorized lab machine.
-
-PROGRAM:
-
-Start Metasploit:
-
-msfconsole
-
-Search:
-
-search type:auxiliary name:ftp
-
-Select scanner:
-
-use auxiliary/scanner/ftp/ftp_version
-
-Set target:
-
-set RHOSTS 192.168.56.101
-
-Execute:
-
-run
-
-View options:
-
-show options
-
-
-OUTPUT:
-
-[*] Auxiliary module selected.
-[*] Scanning target 192.168.56.101
-[*] FTP service information received.
-[*] Scan completed.
-
-RESULT:
-Thus, Metasploit was used to identify FTP service information in an authorized lab.
-
-NOTE:
-The output depends on the target and the availability of the FTP service.
-
-
-==================================================
-PROGRAM 10: SERVER LOG ANALYSIS
-(Original Question)
-==================================================
-
-AIM:
-To analyze server logs and identify suspicious activities using Python.
-
-PROCEDURE:
-1. Create sample server logs.
-2. Read the log entries.
-3. Identify failed login attempts.
-4. Detect suspicious IP addresses.
-5. Display the analysis result.
-
-PROGRAM:
-
-logs = [
-    "192.168.1.10 GET /home 200",
-    "192.168.1.20 POST /login 401",
-    "192.168.1.20 POST /login 401",
-    "192.168.1.20 POST /login 401",
-    "192.168.1.30 GET /admin 403"
-]
-
-count = {}
-
-for log in logs:
-
-    data = log.split()
-
-    ip = data[0]
-    path = data[2]
-    status = int(data[3])
-
-    if path == "/login" and status == 401:
-        count[ip] = count.get(ip, 0) + 1
-
-    if status == 403:
-        print("Suspicious IP:", ip)
-
-for ip, value in count.items():
-
-    print("IP:", ip)
-    print("Failed Logins:", value)
-
-    if value >= 3:
-        print("Possible Brute Force Attack")
-
-
-OUTPUT:
-
-Suspicious IP: 192.168.1.30
-
-IP: 192.168.1.20
-Failed Logins: 3
-Possible Brute Force Attack
-
-RESULT:
-Thus, suspicious activities were identified through server log analysis.
-
-
-==================================================
-PROGRAM 11: MULTIPLE SOURCE FILES AND SHARED LIBRARY
-(APPLY-LEVEL QUESTION - PAGE 2)
-==================================================
-
-AIM:
-To develop an application using multiple source files and a shared library.
-
-PROCEDURE:
-1. Create a header file.
-2. Create a library source file.
-3. Create a main source file.
-4. Create a Makefile.
-5. Compile and execute the application.
-
-PROGRAM:
-
-File: mathlib.h
-
-int add(int a, int b);
-
-
-File: mathlib.c
-
-int add(int a, int b)
-{
-    return a + b;
-}
-
-
-File: main.c
-
-#include <stdio.h>
-#include "mathlib.h"
-
-int main()
-{
-    int result = add(10, 20);
-
-    printf("Sum = %d\n", result);
-
-    return 0;
-}
-
-
-File: Makefile
-
-all: main
-
-libmath.so: mathlib.c mathlib.h
-	gcc -fPIC -shared mathlib.c -o libmath.so
-
-main: main.c libmath.so
-	gcc main.c -L. -lmath -o main
-
-clean:
-	rm -f main libmath.so
-
-
-COMMANDS:
-
-make
-LD_LIBRARY_PATH=. ./main
-
-
-OUTPUT:
-
-Sum = 30
-
-
-RESULT:
-Thus, multiple source files were compiled and linked using a shared library and Makefile.
-
-
-==================================================
-PROGRAM 12: DAC IN LINUX USING ACL
-(APPLY-LEVEL QUESTION - PAGE 2)
-==================================================
-
-AIM:
-To implement Linux DAC using file permissions and Access Control Lists.
-
-PROCEDURE:
-1. Create a shared directory.
-2. Create two users.
-3. Set directory ownership.
-4. Give different ACL permissions.
-5. Verify the permissions.
-
-PROGRAM:
-
-sudo useradd user1
-sudo useradd user2
-
-sudo mkdir /shared
-
-sudo chown root:root /shared
-
-sudo chmod 770 /shared
-
-Create a file:
-
-sudo touch /shared/data.txt
-
-Give user1 read and write permission:
-
-sudo setfacl -m u:user1:rw /shared/data.txt
-
-Give user2 read permission:
-
-sudo setfacl -m u:user2:r /shared/data.txt
-
-Display permissions:
-
-ls -l /shared/data.txt
-
-getfacl /shared/data.txt
-
-
-OUTPUT:
-
-user::rw-
-user:user1:rw-
-user:user2:r--
-group::---
-other::---
-
-
-RESULT:
-Thus, different access permissions were successfully provided to multiple users using ACL.
-
-
-==================================================
-PROGRAM 13: MYSQL DAC WITH MULTIPLE USERS
-(APPLY-LEVEL QUESTION - PAGE 2)
-==================================================
-
-AIM:
-To create multiple MySQL users with different access permissions.
-
-PROCEDURE:
-1. Create a database.
-2. Create a table.
-3. Create two users.
-4. Grant different permissions.
-5. Verify user privileges.
-
-PROGRAM:
-
-CREATE DATABASE company;
-
-USE company;
-
-CREATE TABLE employee (
-    id INT,
-    name VARCHAR(30)
-);
-
-INSERT INTO employee VALUES
-(1, 'Arun');
-
-CREATE USER 'reader'@'localhost'
-IDENTIFIED BY 'read123';
-
-CREATE USER 'writer'@'localhost'
-IDENTIFIED BY 'write123';
-
-GRANT SELECT
-ON company.employee
-TO 'reader'@'localhost';
-
-GRANT SELECT, INSERT
-ON company.employee
-TO 'writer'@'localhost';
-
-SHOW GRANTS FOR 'reader'@'localhost';
-
-SHOW GRANTS FOR 'writer'@'localhost';
-
-
-OUTPUT:
-
-Reader:
-SELECT permission granted.
-
-Writer:
-SELECT and INSERT permissions granted.
-
-
-RESULT:
-Thus, multiple MySQL users were created with different access permissions.
-
-
-==================================================
-PROGRAM 14: RESUME WEBPAGE WITH TABLES AND LINKS
-(APPLY-LEVEL QUESTION - PAGE 2)
-==================================================
-
-AIM:
-To create a professional resume webpage using HTML and CSS with hyperlinks and tables.
-
-PROCEDURE:
-1. Create an HTML file.
-2. Add personal details.
-3. Create an education table.
-4. Add technical skills.
-5. Add hyperlinks and CSS formatting.
-
-PROGRAM:
-
-<!DOCTYPE html>
-<html>
-
-<head>
-<title>Professional Resume</title>
-
-<style>
-
-body {
-    font-family: Arial;
-    background: #eeeeee;
-    margin: 30px;
-}
-
-.container {
-    background: white;
-    padding: 20px;
-    max-width: 700px;
-    margin: auto;
-}
-
-h1, h2 {
-    color: navy;
-}
-
-table {
-    border-collapse: collapse;
-    width: 100%;
-}
-
-td, th {
-    border: 1px solid black;
-    padding: 10px;
-}
-
-</style>
-</head>
-
-<body>
-
-<div class="container">
-
-<h1>ARUN KUMAR</h1>
-
-<p>Email: arun@gmail.com</p>
-
-<h2>Education</h2>
-
-<table>
-
-<tr>
-<th>Course</th>
-<th>Year</th>
-</tr>
-
-<tr>
-<td>BE Computer Science</td>
-<td>2024-2028</td>
-</tr>
-
-<tr>
-<td>HSC</td>
-<td>2024</td>
-</tr>
-
-</table>
-
-<h2>Skills</h2>
-
-<ul>
-<li>Python</li>
-<li>Linux</li>
-<li>HTML</li>
-</ul>
-
-<h2>Portfolio</h2>
-
-<a href="https://github.com/">GitHub</a>
-
-</div>
-
-</body>
-</html>
-
-
-OUTPUT:
-
-Professional resume displayed with:
-- Personal details
-- Education table
-- Technical skills
-- GitHub hyperlink
-- CSS formatting
-
-
-RESULT:
-Thus, a professional resume webpage was created using HTML and CSS.
-
-
-==================================================
-PROGRAM 15: CHROOT WITH REQUIRED DIRECTORIES AND LIBRARIES
-(APPLY-LEVEL QUESTION - PAGE 2)
-==================================================
-
-AIM:
-To create an isolated Linux environment using chroot.
-
-PROCEDURE:
-1. Create a root directory.
-2. Create bin and library directories.
-3. Copy Bash.
-4. Copy required shared libraries.
-5. Execute commands inside chroot.
-
-PROGRAM:
-
-sudo mkdir -p /jail/bin
-sudo mkdir -p /jail/lib
-sudo mkdir -p /jail/lib64
-
-Copy Bash:
-
-sudo cp /bin/bash /jail/bin/
-
-Check dependencies:
-
-ldd /bin/bash
-
-Copy each required library shown by ldd into its corresponding directory under /jail.
-
-Enter the environment:
-
-sudo chroot /jail /bin/bash
-
-Run:
-
-echo "Inside Restricted Environment"
-
-pwd
-
-exit
-
-
-OUTPUT:
-
-Inside Restricted Environment
-/
-
-
-RESULT:
-Thus, a restricted Linux filesystem environment was created using chroot.
-
-NOTE:
-All dynamic library dependencies must be copied. Additional device files and configuration may be needed for other applications.
-
-
-==================================================
-PROGRAM 16: APPARMOR WEB SERVER SECURITY
-(APPLY-LEVEL QUESTION - PAGE 2)
-==================================================
-
-AIM:
-To configure AppArmor to restrict a web server from accessing unauthorized files.
-
-PROCEDURE:
-1. Install AppArmor utilities.
-2. Check AppArmor status.
-3. Create a security profile.
-4. Define allowed file access.
-5. Enable enforce mode.
-
-PROGRAM:
-
-Install utilities:
-
-sudo apt install apparmor-utils
-
-Check status:
-
-sudo aa-status
-
-Create profile:
-
-sudo nano /etc/apparmor.d/usr.sbin.testweb
-
-Enter:
-
-#include <tunables/global>
-
-/usr/sbin/testweb {
-    #include <abstractions/base>
-
-    /usr/sbin/testweb mr,
-    /var/www/html/** r,
-    /var/log/testweb.log w,
-}
-
-Save the file.
-
-Load profile:
-
-sudo apparmor_parser -r /etc/apparmor.d/usr.sbin.testweb
-
-Enable enforce mode:
-
-sudo aa-enforce /etc/apparmor.d/usr.sbin.testweb
-
-Check:
-
-sudo aa-status
-
-
-OUTPUT:
-
-AppArmor profile loaded.
-Profile mode: enforce.
-Access outside the allowed paths is restricted.
-
-
-RESULT:
-Thus, AppArmor was configured to restrict unauthorized file access.
-
-NOTE:
-This is a sample profile for a hypothetical application. A real web server needs a profile matching its executable, libraries, logs and runtime paths.
-
-
-==================================================
-PROGRAM 17: ORACLE VPD WITH DEPARTMENT ACCESS
-(APPLY-LEVEL QUESTION - PAGE 2)
-==================================================
-
-AIM:
-To implement Oracle VPD using a security policy function.
-
-PROCEDURE:
-1. Create an employee table.
-2. Insert department records.
-3. Create a policy function.
-4. Apply the VPD policy.
-5. Test department-based access.
-
-PROGRAM:
-
-CREATE TABLE employees (
-    id NUMBER,
-    name VARCHAR2(30),
-    department VARCHAR2(20)
-);
-
-INSERT INTO employees VALUES
-(1, 'Arun', 'IT');
-
-INSERT INTO employees VALUES
-(2, 'Kumar', 'HR');
-
-INSERT INTO employees VALUES
-(3, 'Ravi', 'IT');
-
-COMMIT;
-
-
-Create policy function:
-
-CREATE OR REPLACE FUNCTION emp_policy(
-    schema_name VARCHAR2,
-    table_name VARCHAR2
-)
-RETURN VARCHAR2
-AS
-BEGIN
-    RETURN
-    'department = SYS_CONTEXT(''USERENV'', ''CLIENT_IDENTIFIER'')';
-END;
-/
-
-
-Add policy:
-
-BEGIN
-    DBMS_RLS.ADD_POLICY(
-        object_schema => USER,
-        object_name => 'EMPLOYEES',
-        policy_name => 'EMP_POLICY',
-        function_schema => USER,
-        policy_function => 'EMP_POLICY',
-        statement_types => 'SELECT'
-    );
-END;
-/
-
-
-Test IT:
-
-EXEC DBMS_SESSION.SET_IDENTIFIER('IT');
-
-SELECT * FROM employees;
-
-
-OUTPUT:
-
-ID    NAME    DEPARTMENT
-1     Arun    IT
-3     Ravi    IT
-
-
-RESULT:
-Thus, Oracle VPD restricted employee records according to the department identifier.
-
-
-==================================================
-PROGRAM 18: MERKLE TREE WITH AUTHENTICATION PATH
-(APPLY-LEVEL QUESTION - PAGE 2)
-==================================================
-
-AIM:
-To implement a Merkle tree and verify message integrity using an authentication path.
-
-PROCEDURE:
-1. Import hashlib.
-2. Create four messages.
-3. Calculate their hashes.
-4. Construct the Merkle root.
-5. Verify a selected message using its authentication path.
-
-PROGRAM:
-
-import hashlib
-
-def H(data):
-    return hashlib.sha256(data).digest()
-
-messages = [
-    b"Message1",
-    b"Message2",
-    b"Message3",
-    b"Message4"
-]
-
-a, b, c, d = [H(x) for x in messages]
-
-ab = H(a + b)
-cd = H(c + d)
-
-root = H(ab + cd)
-
-# Authentication path for Message1
-proof = [b, cd]
-
-calculated = H(a + proof[0])
-calculated = H(calculated + proof[1])
-
-print("Merkle Root:", root.hex()[:16])
-
-if calculated == root:
-    print("Message Verified")
-else:
-    print("Verification Failed")
-
-
-OUTPUT:
-
-Merkle Root: (Hash value)
-Message Verified
-
-
-RESULT:
-Thus, a Merkle authentication path was used to verify message integrity successfully.
-
-
-==================================================
-PROGRAM 19: METASPLOIT AUXILIARY AND EXPLOIT MODULES
-(APPLY-LEVEL QUESTION - PAGE 2)
-==================================================
-
-AIM:
-To demonstrate auxiliary and exploit modules in Metasploit using an authorized lab.
-
-PROCEDURE:
-1. Open Kali Linux.
-2. Start Metasploit.
-3. Search for auxiliary modules.
-4. Run a service scanner.
-5. Examine available exploit modules.
-6. Select an exploit only for an intentionally vulnerable lab.
-7. Validate the result.
-8. Record the findings.
-
-PROGRAM:
-
-Start Metasploit:
-
-msfconsole
-
-Search auxiliary modules:
-
-search type:auxiliary name:ftp
-
-Select FTP scanner:
-
-use auxiliary/scanner/ftp/ftp_version
-
-Set lab IP:
-
-set RHOSTS 192.168.56.101
-
-Run:
-
-run
-
-Search exploit modules:
-
-search type:exploit name:vsftpd
-
-Display options:
-
-show options
-
-NOTE:
-Do not execute an exploit unless the lab target and vulnerable service have been verified and authorized. This program demonstrates discovery and scanner use, not successful exploitation.
-
-
-OUTPUT:
-
-Auxiliary module selected.
-FTP scanner executed.
-Service information displayed.
-Exploit search completed.
-
-
-RESULT:
-Thus, Metasploit auxiliary and exploit module discovery was demonstrated in an authorized environment.
-
-
-==================================================
-PROGRAM 20: SERVER LOG CLASSIFICATION AND CORRELATION
-(APPLY-LEVEL QUESTION - PAGE 2)
-==================================================
-
-AIM:
-To classify suspicious server log entries and identify possible security incidents.
-
-PROCEDURE:
-1. Create sample logs.
-2. Read each log entry.
-3. Identify HTTP error codes.
-4. Count failed login attempts.
-5. Display suspicious activities.
-
-PROGRAM:
-
-logs = [
-    "10.0.0.1 GET /home 200",
-    "10.0.0.2 POST /login 401",
-    "10.0.0.2 POST /login 401",
-    "10.0.0.2 POST /login 401",
-    "10.0.0.3 GET /admin 403",
-    "10.0.0.4 GET /home 200"
-]
-
-failed = {}
-
-for log in logs:
-
-    data = log.split()
-
-    ip = data[0]
-    path = data[2]
-    status = int(data[3])
-
-    if status == 401:
-        failed[ip] = failed.get(ip, 0) + 1
-
-    if status == 403:
-        print("Forbidden Access:", ip)
-
-print("Login Analysis:")
-
-for ip, count in failed.items():
-
-    print(ip, ":", count)
-
-    if count >= 3:
-        print("Possible Brute Force Attack")
-
-
-OUTPUT:
-
-Forbidden Access: 10.0.0.3
-
-Login Analysis:
-
-10.0.0.2 : 3
-
-Possible Brute Force Attack
-
-
-RESULT:
-Thus, suspicious log entries were classified and possible attacks were identified.
-
-
-==================================================
-PROGRAM 21: MULTIPLE SOURCE FILES AND AUTOMATIC REBUILD
-(APPLY-LEVEL QUESTION - PAGE 3)
-==================================================
-
-AIM:
-To create a multi-file C application and automatically rebuild it using Makefile.
-
-PROCEDURE:
-1. Create a header file.
-2. Create two C source files.
-3. Create a Makefile.
-4. Compile the program using make.
-5. Modify a source file and rebuild.
-
-PROGRAM:
-
-File: calc.h
-
-int add(int a, int b);
-
-
-File: calc.c
-
-#include "calc.h"
-
-int add(int a, int b)
-{
-    return a + b;
-}
-
-
-File: main.c
-
-#include <stdio.h>
-#include "calc.h"
-
-int main()
-{
-    printf("Sum = %d\n", add(5, 10));
-    return 0;
-}
-
-
-File: Makefile
-
-all: app
-
-app: main.o calc.o
-	gcc main.o calc.o -o app
-
-main.o: main.c calc.h
-	gcc -c main.c
-
-calc.o: calc.c calc.h
-	gcc -c calc.c
-
-clean:
-	rm -f app *.o
-
-
-COMMANDS:
-
-make
-./app
-
-Modify calc.c and run make again to rebuild.
-
-OUTPUT:
-
-Sum = 15
-
-After modification and rebuilding, the updated program is executed.
-
-
-RESULT:
-Thus, a multi-file application was compiled and automatically rebuilt using Makefile.
-
-
-==================================================
-PROGRAM 22: DAC USING ACL FOR SHARED DIRECTORY
-(APPLY-LEVEL QUESTION - PAGE 3)
-==================================================
-
-AIM:
-To provide different access permissions to multiple users in a shared directory using ACL.
-
-PROCEDURE:
-1. Create two users.
-2. Create a shared directory.
-3. Create a file.
-4. Assign different ACL permissions.
-5. Verify the permissions.
-
-PROGRAM:
-
-sudo useradd user1
-sudo useradd user2
-
-sudo mkdir /shared
-
-sudo chmod 770 /shared
-
-sudo touch /shared/file.txt
-
-Give user1 read and write access:
-
-sudo setfacl -m u:user1:rw /shared/file.txt
-
-Give user2 read-only access:
-
-sudo setfacl -m u:user2:r /shared/file.txt
-
-Display ACL:
-
-getfacl /shared/file.txt
-
-
-OUTPUT:
-
-user::rw-
-user:user1:rw-
-user:user2:r--
-group::---
-other::---
-
-
-RESULT:
-Thus, multiple users were provided with different file access permissions using ACL.
-
-
-==================================================
-PROGRAM 23: MYSQL USERS WITH DIFFERENT PERMISSIONS
-(APPLY-LEVEL QUESTION - PAGE 3)
-==================================================
-
-AIM:
-To manage MySQL privileges and verify user access restrictions.
-
-PROCEDURE:
-1. Create a database.
-2. Create a table.
-3. Create two users.
-4. Grant different permissions.
-5. Verify access restrictions.
-
-PROGRAM:
-
-CREATE DATABASE company;
-
-USE company;
-
-CREATE TABLE employee (
-    id INT,
-    name VARCHAR(30)
-);
-
-INSERT INTO employee VALUES
-(1, 'Arun');
-
-CREATE USER 'reader'@'localhost'
-IDENTIFIED BY 'read123';
-
-CREATE USER 'admin1'@'localhost'
-IDENTIFIED BY 'admin123';
-
-GRANT SELECT
-ON company.employee
-TO 'reader'@'localhost';
-
-GRANT ALL PRIVILEGES
-ON company.employee
-TO 'admin1'@'localhost';
-
-SHOW GRANTS FOR 'reader'@'localhost';
-
-SHOW GRANTS FOR 'admin1'@'localhost';
-
-
-OUTPUT:
-
-Reader:
-SELECT permission only.
-
-Admin1:
-All table privileges granted.
-
-
-RESULT:
-Thus, MySQL users were created with different access permissions and restrictions.
-
-
-==================================================
-PROGRAM 24: RESUME WEBPAGE WITH PROFESSIONAL FORMATTING
-(APPLY-LEVEL QUESTION - PAGE 3)
-==================================================
-
-AIM:
-To modify a resume webpage using HTML and CSS with hyperlinks and tables.
-
-PROCEDURE:
-1. Create an HTML document.
-2. Add personal information.
-3. Add education details using a table.
-4. Add technical skills.
-5. Add hyperlinks and CSS styles.
-
-PROGRAM:
-
-<!DOCTYPE html>
-<html>
-
-<head>
-
-<title>Resume</title>
-
-<style>
-
-body {
-    font-family: Arial;
-    background: #f0f0f0;
-}
-
-.container {
-    background: white;
-    width: 70%;
-    margin: auto;
-    padding: 20px;
-}
-
-h1 {
-    color: navy;
-}
-
-table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-td, th {
-    border: 1px solid black;
-    padding: 8px;
-}
-
-</style>
-
-</head>
-
-<body>
-
-<div class="container">
-
-<h1>My Resume</h1>
-
-<h2>Personal Details</h2>
-
-<p>Name: Arun Kumar</p>
-<p>Email: arun@gmail.com</p>
-
-<h2>Education</h2>
-
-<table>
-
-<tr>
-<th>Course</th>
-<th>Year</th>
-</tr>
-
-<tr>
-<td>BE</td>
-<td>2024-2028</td>
-</tr>
-
-<tr>
-<td>HSC</td>
-<td>2024</td>
-</tr>
-
-</table>
-
-<h2>Skills</h2>
-
-<ul>
-<li>Python</li>
-<li>Linux</li>
-<li>HTML and CSS</li>
-</ul>
-
-<h2>Links</h2>
-
-<a href="https://github.com/">GitHub</a>
-
-</div>
-
-</body>
-</html>
-
-
-OUTPUT:
-
-A professionally formatted resume webpage is displayed with tables, hyperlinks and CSS styles.
-
-
-RESULT:
-Thus, a professional resume webpage was successfully designed using HTML and CSS.
-
-
-==================================================
-PROGRAM 25: RESTRICTED LINUX ENVIRONMENT USING CHROOT
-(APPLY-LEVEL QUESTION - PAGE 3)
-==================================================
-
-AIM:
-To establish a restricted Linux environment using chroot.
-
-PROCEDURE:
-1. Create an isolated root directory.
-2. Create bin and library directories.
-3. Copy the required shell.
-4. Copy shared library dependencies.
-5. Execute commands inside chroot.
-
-PROGRAM:
-
-Create directories:
-
-sudo mkdir -p /secure/bin
-sudo mkdir -p /secure/lib
-sudo mkdir -p /secure/lib64
-
-Copy Bash:
-
-sudo cp /bin/bash /secure/bin/
-
-Check libraries:
-
-ldd /bin/bash
-
-Copy all listed shared libraries into their matching paths under /secure.
-
-Enter environment:
-
-sudo chroot /secure /bin/bash
-
-Execute:
-
-echo "Secure Environment"
-
-pwd
-
-exit
-
-
-OUTPUT:
-
-Secure Environment
-/
-
-
-RESULT:
-Thus, a restricted Linux environment was established using chroot.
-
-NOTE:
-Chroot is not a replacement for containers or a complete security boundary.
-
-
-==================================================
-PROGRAM 26: SELINUX / APPARMOR WEB SERVER RESTRICTION
-(APPLY-LEVEL QUESTION - PAGE 3)
-==================================================
-
-AIM:
-To configure security policies to restrict a web server from accessing unauthorized files.
-
-PROCEDURE:
-1. Check AppArmor status.
-2. Identify the web server profile.
-3. Create or edit its security profile.
-4. Define allowed directories.
-5. Enable enforce mode.
-
-PROGRAM:
-
-Check status:
-
-sudo aa-status
-
-Check web server profile:
-
-ls /etc/apparmor.d/
-
-Create a sample profile:
-
-sudo nano /etc/apparmor.d/usr.sbin.testweb
-
-Enter:
-
-#include <tunables/global>
-
-/usr/sbin/testweb {
-    #include <abstractions/base>
-
-    /usr/sbin/testweb mr,
-    /var/www/html/** r,
-    /var/log/testweb.log w,
-}
-
-Load profile:
-
-sudo apparmor_parser -r /etc/apparmor.d/usr.sbin.testweb
-
-Enable enforcement:
-
-sudo aa-enforce /etc/apparmor.d/usr.sbin.testweb
-
-Check:
-
-sudo aa-status
-
-
-OUTPUT:
-
-Profile loaded.
-Profile mode: enforce.
-Unauthorized access is restricted.
-
-
-RESULT:
-Thus, AppArmor security policies were used to restrict unauthorized web server file access.
-
-NOTE:
-This is a sample profile for a hypothetical executable. For Apache or Nginx, use and carefully modify the actual installed profile rather than replacing it with this sample.
-
-
-==================================================
-PROGRAM 27: ORACLE VPD WITH SECURITY POLICY
-(APPLY-LEVEL QUESTION - PAGE 3)
-==================================================
-
-AIM:
-To implement Oracle Virtual Private Database using a department-based security policy.
-
-PROCEDURE:
-1. Create an employee table.
-2. Insert employee records.
-3. Create a policy function.
-4. Apply the VPD policy.
-5. Verify department-based access.
-
-PROGRAM:
-
-CREATE TABLE employee (
-    id NUMBER,
-    name VARCHAR2(30),
-    department VARCHAR2(20)
-);
-
-INSERT INTO employee VALUES
-(1, 'Arun', 'IT');
-
-INSERT INTO employee VALUES
-(2, 'Kumar', 'HR');
-
-INSERT INTO employee VALUES
-(3, 'Ravi', 'IT');
-
-COMMIT;
-
-
-Create function:
-
-CREATE OR REPLACE FUNCTION dept_security(
-    schema_name VARCHAR2,
-    table_name VARCHAR2
-)
-RETURN VARCHAR2
-AS
-BEGIN
-    RETURN
-    'department = SYS_CONTEXT(''USERENV'', ''CLIENT_IDENTIFIER'')';
-END;
-/
-
-
-Add security policy:
-
-BEGIN
-    DBMS_RLS.ADD_POLICY(
-        object_schema => USER,
-        object_name => 'EMPLOYEE',
-        policy_name => 'DEPT_SECURITY',
-        function_schema => USER,
-        policy_function => 'DEPT_SECURITY',
-        statement_types => 'SELECT'
-    );
-END;
-/
-
-
-Set IT access:
-
-EXEC DBMS_SESSION.SET_IDENTIFIER('IT');
-
-SELECT * FROM employee;
-
-
-OUTPUT:
-
-ID    NAME    DEPARTMENT
-1     Arun    IT
-3     Ravi    IT
-
-
-RESULT:
-Thus, department-specific access was implemented using Oracle VPD.
-
-NOTE:
-The CLIENT_IDENTIFIER must be set by a trusted application after authenticating the user. It should not be freely controlled by untrusted users.
-
-
-==================================================
-PROGRAM 28: MERKLE TREE AND MESSAGE AUTHENTICATION
-(APPLY-LEVEL QUESTION - PAGE 3)
-==================================================
-
-AIM:
-To implement a Merkle authentication tree and verify message integrity.
-
-PROCEDURE:
-1. Import the hashlib module.
-2. Create four messages.
-3. Generate SHA-256 hashes.
-4. Construct the Merkle tree.
-5. Verify a message using its authentication path.
-
-PROGRAM:
-
-import hashlib
-
-def hash_data(data):
-    return hashlib.sha256(data).digest()
-
-messages = [
-    b"One",
-    b"Two",
-    b"Three",
-    b"Four"
-]
-
-a = hash_data(messages[0])
-b = hash_data(messages[1])
-c = hash_data(messages[2])
-d = hash_data(messages[3])
-
-ab = hash_data(a + b)
-cd = hash_data(c + d)
-
-root = hash_data(ab + cd)
-
-# Verify the first message
-
-proof = [b, cd]
-
-result = hash_data(a + proof[0])
-result = hash_data(result + proof[1])
-
-print("Merkle Root:", root.hex()[:16])
-
-if result == root:
-    print("Message Authentication Successful")
+if response == expected:
+    print("Authentication Successful")
 else:
     print("Authentication Failed")
 
-
 OUTPUT:
 
-Merkle Root: (Hash value)
-Message Authentication Successful
-
-
-RESULT:
-Thus, the Merkle authentication tree successfully verified message integrity.
-
-
-==================================================
-PROGRAM 29: METASPLOIT AUXILIARY AND EXPLOIT MODULES
-(APPLY-LEVEL QUESTION - PAGE 3)
-==================================================
-
-AIM:
-To demonstrate auxiliary and exploit module usage in Metasploit.
-
-PROCEDURE:
-1. Open Kali Linux.
-2. Start Metasploit.
-3. Search auxiliary modules.
-4. Run an authorized service scanner.
-5. Search for exploit modules.
-6. Examine module options.
-7. Record scan information.
-8. Prepare the vulnerability report.
-
-PROGRAM:
-
-Start Metasploit:
-
-msfconsole
-
-Search auxiliary modules:
-
-search type:auxiliary
-
-Search FTP scanner:
-
-search type:auxiliary name:ftp
-
-Select scanner:
-
-use auxiliary/scanner/ftp/ftp_version
-
-Set authorized target:
-
-set RHOSTS 192.168.56.101
-
-Run:
-
-run
-
-Search exploit modules:
-
-search type:exploit name:ftp
-
-Display options:
-
-show options
-
-Display information:
-
-info
-
-
-OUTPUT:
-
-Metasploit started.
-Auxiliary modules found.
-FTP scanner selected.
-Target scan completed.
-Exploit modules listed.
-
+Challenge = (Random value)
+Response = (SHA-256 hash)
+Authentication Successful
 
 RESULT:
-Thus, Metasploit auxiliary and exploit module discovery was demonstrated in an authorized test environment.
+Thus, a simple challenge-response identification protocol was implemented successfully.
 
 NOTE:
-An exploit should only be executed against an intentionally vulnerable target with explicit authorization.
+This is a simplified demonstration, not a standardized authentication protocol. Real systems should use a secure HMAC-based challenge-response design.
 
 
 ==================================================
-PROGRAM 30: SERVER LOG ANALYSIS USING FILTERING
-(APPLY-LEVEL QUESTION - PAGE 3)
+QUESTION 11: PSEUDO RANDOM AND CRYPTOGRAPHICALLY
+SECURE RANDOM NUMBERS
 ==================================================
+
+FULL QUESTION:
+Implement pseudo random and cryptographically secure random numbers using Python Program.
 
 AIM:
-To classify suspicious server log entries using filtering and correlation techniques.
+To generate pseudo-random and cryptographically secure random numbers.
 
 PROCEDURE:
-1. Create sample server logs.
-2. Read the log entries.
-3. Filter HTTP error codes.
-4. Count failed login attempts.
-5. Identify suspicious IP addresses.
+1. Import random and secrets modules.
+2. Generate a pseudo-random number.
+3. Generate a secure random number.
+4. Display both numbers.
+5. Compare their usage.
 
 PROGRAM:
 
-logs = [
-    "192.168.1.1 GET /home 200",
-    "192.168.1.2 POST /login 401",
-    "192.168.1.2 POST /login 401",
-    "192.168.1.2 POST /login 401",
-    "192.168.1.3 GET /admin 403",
-    "192.168.1.4 GET /home 200"
-]
+import random
+import secrets
 
-failed = {}
+# Pseudo random number
+random.seed(10)
 
-for log in logs:
+a = random.randint(1, 100)
 
-    data = log.split()
+# Cryptographically secure random number
+b = secrets.randbelow(100) + 1
 
-    ip = data[0]
-    method = data[1]
-    path = data[2]
-    status = int(data[3])
+print("Pseudo Random Number =", a)
+print("Secure Random Number =", b)
 
-    if status == 401:
-        failed[ip] = failed.get(ip, 0) + 1
+OUTPUT:
 
-    if status == 403:
-        print("Suspicious Access:", ip)
+Pseudo Random Number = 74
+Secure Random Number = (Random value)
 
-print("\nFailed Login Analysis")
+RESULT:
+Thus, pseudo-random and cryptographically secure random numbers were generated successfully.
 
-for ip, count in failed.items():
 
-    print(ip, ":", count)
+==================================================
+QUESTION 12: FERMAT'S AND EULER'S THEOREMS WITH RSA
+==================================================
 
-    if count >= 3:
-        print("ALERT: Brute Force Attack Detected")
+FULL QUESTION:
+Using Python, verify Fermat's Little Theorem and Euler's Theorem for different values of a, p, and n. Use Euler's theorem to find the modular inverse of a number used in RSA encryption.
+
+AIM:
+To verify Fermat's and Euler's theorems and calculate the RSA modular inverse.
+
+PROCEDURE:
+1. Define a, p and n.
+2. Verify Fermat's theorem.
+3. Calculate Euler's totient.
+4. Verify Euler's theorem.
+5. Calculate RSA private exponent.
+
+PROGRAM:
+
+import math
+
+a = 3
+p = 7
+n = 10
+
+print("Fermat Verification:",
+      pow(a, p-1, p) == 1)
+
+phi = sum(1 for i in range(1, n+1)
+          if math.gcd(i, n) == 1)
+
+print("Euler Verification:",
+      pow(a, phi, n) == 1)
+
+# RSA values
+p = 11
+q = 13
+
+N = p * q
+phi = (p-1) * (q-1)
+
+e = 7
+d = pow(e, -1, phi)
+
+print("RSA Public Exponent =", e)
+print("RSA Private Exponent =", d)
+
+OUTPUT:
+
+Fermat Verification: True
+Euler Verification: True
+RSA Public Exponent = 7
+RSA Private Exponent = 103
+
+RESULT:
+Thus, Fermat's and Euler's theorems were verified and the RSA private exponent was calculated.
+
+
+==================================================
+QUESTION 13: LARGE INTEGER PRIMALITY TEST
+==================================================
+
+FULL QUESTION:
+Write a program to determine whether a large integer is prime using (a) Fermat Test and (b) Miller-Rabin Test. Compare correctness and speed with CrypTool simulations.
+
+AIM:
+To identify prime numbers using Fermat and Miller-Rabin tests and compare their results.
+
+PROCEDURE:
+1. Enter a large integer.
+2. Apply Fermat primality test.
+3. Apply Miller-Rabin test.
+4. Compare the results.
+5. Record execution time.
+
+PROGRAM:
+
+import random
+import time
+
+def fermat(n):
+
+    if n < 4:
+        return n in (2, 3)
+
+    for i in range(10):
+        a = random.randint(2, n-2)
+
+        if pow(a, n-1, n) != 1:
+            return False
+
+    return True
+
+
+def miller(n):
+
+    if n < 4:
+        return n in (2, 3)
+
+    d = n-1
+    s = 0
+
+    while d % 2 == 0:
+        d //= 2
+        s += 1
+
+    for i in range(10):
+
+        a = random.randint(2, n-2)
+        x = pow(a, d, n)
+
+        if x == 1 or x == n-1:
+            continue
+
+        for j in range(s-1):
+
+            x = pow(x, 2, n)
+
+            if x == n-1:
+                break
+
+        else:
+            return False
+
+    return True
+
+
+n = 101
+
+start = time.time()
+f = fermat(n)
+t1 = time.time()-start
+
+start = time.time()
+m = miller(n)
+t2 = time.time()-start
+
+print("Fermat Test =", f)
+print("Miller Rabin =", m)
+print("Fermat Time =", t1)
+print("Miller Time =", t2)
+
+OUTPUT:
+
+Fermat Test = True
+Miller Rabin = True
+Fermat Time = (Execution time)
+Miller Time = (Execution time)
+
+COMPARISON:
+
+Fermat:
+Simple probabilistic test.
+
+Miller-Rabin:
+More reliable probabilistic test.
+
+RESULT:
+Thus, the primality of an integer was tested using Fermat and Miller-Rabin algorithms.
+
+NOTE:
+Execution times vary by computer and input. CrypTool comparison must be performed separately in the application.
+
+
+==================================================
+QUESTION 14: FEIGE-FIAT-SHAMIR ZERO-KNOWLEDGE
+IDENTIFICATION PROTOCOL
+==================================================
+
+FULL QUESTION:
+Simulate an identification scenario where a user (Prover) authenticates to a server (Verifier) using the Feige-Fiat-Shamir zero-knowledge protocol.
+
+AIM:
+To simulate user authentication using the Feige-Fiat-Shamir protocol.
+
+PROCEDURE:
+1. Generate the prover's private and public keys.
+2. Calculate the modulus.
+3. Generate a random commitment.
+4. Server sends a challenge.
+5. Verify the prover's response.
+
+PROGRAM:
+
+p = 7
+q = 11
+n = p*q
+
+# Prover's private key
+s = 3
+
+# Public key
+v = pow(s, 2, n)
+
+# Random value
+r = 2
+
+# Commitment
+x = pow(r, 2, n)
+
+# Server challenge
+e = 1
+
+# Prover response
+y = (r*s) % n
+
+# Server verification
+check = (
+    pow(y, 2, n) ==
+    (x*pow(v, e, n)) % n
+)
+
+print("Prover Commitment =", x)
+print("Server Challenge =", e)
+print("Prover Response =", y)
+print("Authentication =", check)
+
+OUTPUT:
+
+Prover Commitment = 4
+Server Challenge = 1
+Prover Response = 6
+Authentication = True
+
+RESULT:
+Thus, the Feige-Fiat-Shamir zero-knowledge identification protocol was simulated successfully.
+
+
+==================================================
+QUESTION 15: RABIN ONE-TIME SIGNATURE SCHEME
+==================================================
+
+FULL QUESTION:
+Write a Python program to generate keys, sign a message, and verify the signature using the Rabin one-time signature scheme.
+
+AIM:
+To demonstrate Rabin signature key generation, signing and verification.
+
+PROCEDURE:
+1. Select two suitable prime numbers.
+2. Calculate the public modulus.
+3. Generate the private key factors.
+4. Generate a signature for the message.
+5. Verify the signature using the public key.
+
+PROGRAM:
+
+import hashlib
+
+p = 7
+q = 11
+
+n = p*q
+
+message = "HELLO"
+
+def H(data):
+    return int(hashlib.sha256(
+        data.encode()).hexdigest(), 16) % n
+
+# Find a message representative
+salt = 0
+
+while True:
+
+    value = H(message + str(salt))
+
+    if value != 0 and pow(value, (p-1)//2, p) == 1 \
+       and pow(value, (q-1)//2, q) == 1:
+        break
+
+    salt += 1
+
+# Square roots
+mp = pow(value, (p+1)//4, p)
+mq = pow(value, (q+1)//4, q)
+
+# CRT
+signature = (
+    mq + q * ((mp-mq) * pow(q, -1, p) % p)
+) % n
+
+verified = pow(signature, 2, n) == value
+
+print("Public Key =", n)
+print("Salt =", salt)
+print("Signature =", signature)
+print("Verification =", verified)
+
+OUTPUT:
+
+Public Key = 77
+Salt = (Calculated value)
+Signature = (Calculated value)
+Verification = True
+
+RESULT:
+Thus, a simplified Rabin signature was generated and verified successfully.
+
+NOTE:
+This is a textbook Rabin-style educational signature demonstration with a salted quadratic-residue representative. It is not a standardized production one-time signature scheme.
+
+
+==================================================
+QUESTION 16: PLAYFAIR CIPHER
+==================================================
+
+FULL QUESTION:
+Use CrypTool 2 to implement the Playfair cipher to encrypt the message "ATTACK AT DAWN" and decrypt the message.
+
+AIM:
+To encrypt and decrypt a message using the Playfair cipher in CrypTool 2.
+
+PROCEDURE:
+1. Open CrypTool 2.
+2. Select the Playfair cipher component.
+3. Enter the key and plaintext.
+4. Perform encryption.
+5. Decrypt the ciphertext.
+
+KEY:
+MONARCHY
+
+PLAINTEXT:
+ATTACK AT DAWN
+
+OUTPUT DIAGRAM:
+
++----------------------+
+| Plaintext            |
+| ATTACK AT DAWN       |
++----------------------+
+           |
+           v
++----------------------+
+| Playfair Cipher      |
+| Key: MONARCHY        |
++----------------------+
+           |
+           v
++----------------------+
+| Ciphertext           |
+| RSSRDEOSKQRA         |
++----------------------+
+           |
+           v
++----------------------+
+| Playfair Decryption  |
++----------------------+
+           |
+           v
++----------------------+
+| ATTACKATDAWN         |
++----------------------+
+
+RESULT:
+Thus, the Playfair cipher was used to encrypt and decrypt the given message.
+
+NOTE:
+Use I/J in the same square and remove spaces before encryption. The displayed ciphertext depends on the standard Playfair convention and key.
+
+
+==================================================
+QUESTION 17: AES ENCRYPTION IN ECB MODE
+==================================================
+
+FULL QUESTION:
+Use CrypTool 2 to encrypt a file using the AES (Advanced Encryption Standard) algorithm in ECB mode.
+
+AIM:
+To encrypt a file using AES algorithm in ECB mode.
+
+PROCEDURE:
+1. Open CrypTool 2.
+2. Create a new workspace.
+3. Add a file input and AES encryption component.
+4. Select ECB mode and enter the key.
+5. Connect the components and execute.
+
+OUTPUT DIAGRAM:
+
++------------------+
+| Input File       |
+| sample.txt       |
++------------------+
+         |
+         v
++------------------+
+| AES Encryption   |
+| Mode: ECB        |
+| Key: 128-bit     |
++------------------+
+         |
+         v
++------------------+
+| Ciphertext       |
+| Encrypted File   |
++------------------+
+
+RESULT:
+Thus, the given file was encrypted using AES in ECB mode.
+
+NOTE:
+ECB reveals patterns in repeated plaintext blocks and is not recommended for real-world file encryption.
+
+
+==================================================
+QUESTION 18: RSA ENCRYPTION AND DECRYPTION
+==================================================
+
+FULL QUESTION:
+Using CrypTool 2, generate an RSA key pair. Encrypt a message with the public key and decrypt it with the private key.
+
+AIM:
+To generate an RSA key pair and perform encryption and decryption.
+
+PROCEDURE:
+1. Open CrypTool 2.
+2. Add the RSA key generation component.
+3. Generate public and private keys.
+4. Encrypt the message using the public key.
+5. Decrypt using the private key.
+
+OUTPUT DIAGRAM:
+
++------------------+
+| Plaintext        |
+| HELLO STUDENT    |
++------------------+
+         |
+         v
++------------------+
+| RSA Encryption   |
+| Public Key       |
++------------------+
+         |
+         v
++------------------+
+| Ciphertext       |
++------------------+
+         |
+         v
++------------------+
+| RSA Decryption   |
+| Private Key      |
++------------------+
+         |
+         v
++------------------+
+| HELLO STUDENT    |
++------------------+
+
+RESULT:
+Thus, RSA encryption and decryption were successfully performed using CrypTool 2.
+
+
+==================================================
+QUESTION 19: SHA-256, MD5 AND SHA-1
+==================================================
+
+FULL QUESTION:
+In CrypTool 2, apply the SHA-256 hash function to the string "Semester Exam" and compare the resulting hash with an online SHA-256 generator. Experiment with the MD5 and SHA-1 hash functions.
+
+AIM:
+To generate and compare MD5, SHA-1 and SHA-256 hashes.
+
+PROCEDURE:
+1. Open CrypTool 2.
+2. Enter "Semester Exam".
+3. Add the SHA-256 hash component.
+4. Generate MD5 and SHA-1 hashes.
+5. Compare the results with an online hash generator.
+
+OUTPUT DIAGRAM:
+
++----------------------+
+| Input                |
+| Semester Exam        |
++----------------------+
+           |
+           v
++----------------------+
+| Hash Function        |
++----------------------+
+     |       |       |
+     v       v       v
++-------+ +-------+ +---------+
+| MD5   | | SHA-1 | | SHA-256 |
++-------+ +-------+ +---------+
+     |       |       |
+     v       v       v
++----------------------+
+| Hash Values          |
++----------------------+
+
+OUTPUT:
+
+MD5:
+32 hexadecimal characters.
+
+SHA-1:
+40 hexadecimal characters.
+
+SHA-256:
+64 hexadecimal characters.
+
+The online SHA-256 result must match CrypTool for the same exact input and encoding.
+
+RESULT:
+Thus, MD5, SHA-1 and SHA-256 hash values were generated and compared successfully.
+
+
+==================================================
+QUESTION 20: RSA DIGITAL SIGNATURE
+==================================================
+
+FULL QUESTION:
+Use CrypTool 2 to create a digital signature for a message using RSA and a hashing algorithm of your choice (e.g., SHA-256). Verify the digital signature using the public key.
+
+AIM:
+To create and verify an RSA digital signature using SHA-256.
+
+PROCEDURE:
+1. Open CrypTool 2.
+2. Generate an RSA key pair.
+3. Enter the message.
+4. Create the signature using the private key and SHA-256.
+5. Verify using the public key.
+
+OUTPUT DIAGRAM:
+
++------------------+
+| Message          |
++------------------+
+         |
+         v
++------------------+
+| SHA-256 Hash     |
++------------------+
+         |
+         v
++------------------+
+| RSA Signing      |
+| Private Key      |
++------------------+
+         |
+         v
++------------------+
+| Digital Signature|
++------------------+
+         |
+         v
++------------------+
+| RSA Verification |
+| Public Key       |
++------------------+
+         |
+         v
++------------------+
+| Valid Signature  |
++------------------+
+
+RESULT:
+Thus, the RSA digital signature was created and successfully verified using CrypTool 2.
+
+
+==================================================
+QUESTION 21: ELLIPTIC CURVE CRYPTOGRAPHY
+==================================================
+
+FULL QUESTION:
+Using CrypTool 2, generate an ECC key pair and encrypt a message with the public key. Decrypt the message using the private key.
+
+AIM:
+To generate an ECC key pair and demonstrate public-key encryption and decryption.
+
+PROCEDURE:
+1. Open CrypTool 2.
+2. Select ECC key generation.
+3. Generate public and private keys.
+4. Use an ECC-based encryption component.
+5. Decrypt and verify the original message.
+
+OUTPUT DIAGRAM:
+
++------------------+
+| Plaintext        |
++------------------+
+         |
+         v
++------------------+
+| ECC Encryption   |
+| Public Key       |
++------------------+
+         |
+         v
++------------------+
+| Ciphertext       |
++------------------+
+         |
+         v
++------------------+
+| ECC Decryption   |
+| Private Key      |
++------------------+
+         |
+         v
++------------------+
+| Original Message |
++------------------+
+
+RESULT:
+Thus, ECC-based encryption and decryption were demonstrated using CrypTool 2.
+
+NOTE:
+ECC key generation alone does not encrypt arbitrary messages. Use an ECIES or supported hybrid encryption component.
+
+
+==================================================
+QUESTION 22: DIFFIE-HELLMAN KEY EXCHANGE
+==================================================
+
+FULL QUESTION:
+Using CrypTool 2, simulate the Diffie-Hellman key exchange algorithm. Explain how two parties can securely share a secret key over an insecure channel using Diffie-Hellman.
+
+AIM:
+To demonstrate secure shared key generation using Diffie-Hellman.
+
+PROCEDURE:
+1. Select a prime number and generator.
+2. Generate Alice's private key.
+3. Generate Bob's private key.
+4. Exchange public keys.
+5. Calculate and compare the shared secret.
+
+OUTPUT DIAGRAM:
+
+       PUBLIC VALUES
+        p = 23
+        g = 5
+
++----------------+       +----------------+
+| Alice          |       | Bob            |
+| Private = 6    |       | Private = 15   |
++----------------+       +----------------+
+        |                         |
+        v                         v
+| Public = 8 |             | Public = 19 |
+        |                         |
+        +------ Exchange --------+
+        |                         |
+        v                         v
+| Shared = 2 |             | Shared = 2  |
+
+OUTPUT:
+
+Alice Shared Key = 2
+Bob Shared Key = 2
+
+RESULT:
+Thus, both parties generated the same shared secret using Diffie-Hellman key exchange.
+
+NOTE:
+Diffie-Hellman requires authentication to prevent man-in-the-middle attacks.
+
+
+==================================================
+QUESTION 23: IMAGE STEGANOGRAPHY
+==================================================
+
+FULL QUESTION:
+Use CrypTool 2 to hide a secret message in an image file using Steganography Techniques.
+
+AIM:
+To hide a secret message inside an image using steganography.
+
+PROCEDURE:
+1. Open CrypTool 2.
+2. Select image steganography components.
+3. Load a cover image.
+4. Enter the secret message.
+5. Embed and extract the hidden message.
+
+OUTPUT DIAGRAM:
+
++------------------+
+| Cover Image      |
++------------------+
+         |
+         v
++------------------+
+| Secret Message   |
++------------------+
+         |
+         v
++------------------+
+| Steganography    |
+| Embedding        |
++------------------+
+         |
+         v
++------------------+
+| Stego Image      |
++------------------+
+         |
+         v
++------------------+
+| Message Extract  |
++------------------+
+         |
+         v
++------------------+
+| Secret Message   |
++------------------+
+
+OUTPUT:
+
+Original Image: image.png
+
+Secret Message: HELLO
+
+Stego Image: Generated successfully.
+
+Extracted Message: HELLO
+
+RESULT:
+Thus, a secret message was successfully hidden and extracted from an image.
+
+
+==================================================
+QUESTION 24: CLASSICAL CIPHER TECHNIQUES
+==================================================
+
+FULL QUESTION:
+Perform the Classical cipher techniques using CrypTool 2 and perform encryption and decryption.
+
+AIM:
+To perform classical encryption and decryption using CrypTool 2.
+
+PROCEDURE:
+1. Open CrypTool 2.
+2. Select a classical cipher component.
+3. Enter plaintext and key.
+4. Perform encryption.
+5. Decrypt and verify the plaintext.
+
+OUTPUT DIAGRAM:
+
++------------------+
+| Plaintext        |
+| HELLO            |
++------------------+
+         |
+         v
++------------------+
+| Classical Cipher |
+| Caesar           |
++------------------+
+         |
+         v
++------------------+
+| Ciphertext       |
+| KHOOR            |
++------------------+
+         |
+         v
++------------------+
+| Decryption       |
++------------------+
+         |
+         v
++------------------+
+| HELLO            |
++------------------+
+
+RESULT:
+Thus, classical cipher encryption and decryption were successfully performed.
+
+
+==================================================
+QUESTION 25: MODIFIED CAESAR CIPHER
+==================================================
+
+FULL QUESTION:
+Using CrypTool 2, implement the Modified Caesar cipher for encrypting and decrypting a plaintext message. Encrypt the message "HELLO STUDENT" with a shift of 3 and decrypt the ciphertext back to plaintext using the Caesar cipher.
+
+AIM:
+To encrypt and decrypt a message using Caesar cipher with a shift of 3.
+
+PROCEDURE:
+1. Open CrypTool 2.
+2. Select Caesar cipher.
+3. Enter HELLO STUDENT.
+4. Set the shift value to 3.
+5. Encrypt and decrypt the message.
+
+OUTPUT DIAGRAM:
+
++----------------------+
+| Plaintext            |
+| HELLO STUDENT        |
++----------------------+
+           |
+           v
++----------------------+
+| Caesar Encryption    |
+| Shift = 3            |
++----------------------+
+           |
+           v
++----------------------+
+| Ciphertext           |
+| KHOOR VWXGHQW        |
++----------------------+
+           |
+           v
++----------------------+
+| Caesar Decryption    |
+| Shift = 3            |
++----------------------+
+           |
+           v
++----------------------+
+| HELLO STUDENT        |
++----------------------+
+
+RESULT:
+Thus, Caesar cipher encryption and decryption were successfully performed.
+
+
+==================================================
+QUESTION 26: SHA-256, MD5 AND SHA-1
+==================================================
+
+FULL QUESTION:
+In CrypTool 2, apply the SHA-256 hash function to the string "Applied Cryptography" and compare the resulting hash with an online SHA-256 generator. Experiment with the MD5 and SHA-1 hash functions.
+
+AIM:
+To generate and compare SHA-256, MD5 and SHA-1 hashes.
+
+PROCEDURE:
+1. Open CrypTool 2.
+2. Enter Applied Cryptography.
+3. Select SHA-256.
+4. Generate MD5 and SHA-1 hashes.
+5. Compare the generated values.
+
+OUTPUT DIAGRAM:
+
++------------------------+
+| Applied Cryptography   |
++------------------------+
+            |
+            v
++------------------------+
+| Hash Function          |
++------------------------+
+      |       |       |
+      v       v       v
+   +------+ +------+ +--------+
+   | MD5  | | SHA1 | | SHA256 |
+   +------+ +------+ +--------+
+      |       |       |
+      v       v       v
++------------------------+
+| Hash Values            |
++------------------------+
+
+OUTPUT:
+
+MD5 = 32 hexadecimal characters
+SHA-1 = 40 hexadecimal characters
+SHA-256 = 64 hexadecimal characters
+
+RESULT:
+Thus, different hash functions were successfully applied and compared.
+
+
+==================================================
+QUESTION 27: MAC AND SHA COMPARISON
+==================================================
+
+FULL QUESTION:
+Using CrypTool 2, compare the MAC and SHA for the given string "Data Encryption" using Hash functions.
+
+AIM:
+To compare Message Authentication Code and SHA hash values.
+
+PROCEDURE:
+1. Open CrypTool 2.
+2. Enter Data Encryption.
+3. Select SHA-256.
+4. Select HMAC-SHA-256 and enter a secret key.
+5. Compare both outputs.
+
+OUTPUT DIAGRAM:
+
+             +------------------+
+             | Data Encryption  |
+             +------------------+
+                      |
+             +--------+--------+
+             |                 |
+             v                 v
+       +-----------+     +-------------+
+       | SHA-256   |     | HMAC-SHA256 |
+       | No key    |     | Secret key  |
+       +-----------+     +-------------+
+             |                 |
+             v                 v
+       +-----------+     +-------------+
+       | Hash      |     | MAC         |
+       +-----------+     +-------------+
+
+OUTPUT:
+
+SHA-256: 256-bit hash value.
+
+HMAC-SHA-256: 256-bit MAC value.
+
+Both values are different because HMAC uses a secret key.
+
+RESULT:
+Thus, SHA and MAC were generated and compared successfully.
+
+==================================================
+QUESTION 28: DIGITAL SIGNATURE FOR A FILE
+==================================================
+
+FULL QUESTION:
+Create a digital signature for a file using RSA (or DSA) and verify the signature using CrypTool Workspace.
+
+AIM:
+To create and verify a file's digital signature using RSA.
+
+PROCEDURE:
+1. Open CrypTool Workspace.
+2. Load the file.
+3. Generate an RSA key pair.
+4. Sign the file using the private key.
+5. Verify the signature using the public key.
+
+OUTPUT DIAGRAM:
+
++------------------+
+| Input File       |
++------------------+
+         |
+         v
++------------------+
+| SHA-256 Hash     |
++------------------+
+         |
+         v
++------------------+
+| RSA Signing      |
+| Private Key      |
++------------------+
+         |
+         v
++------------------+
+| Signature File   |
++------------------+
+         |
+         v
++------------------+
+| Verification     |
+| Public Key       |
++------------------+
+         |
+         v
++------------------+
+| Valid Signature  |
++------------------+
+
+RESULT:
+Thus, a digital signature was created and verified using CrypTool Workspace.
+
+
+==================================================
+QUESTION 29: IMAGE STEGANOGRAPHY IN CRYPTOOL WORKSPACE
+==================================================
+
+FULL QUESTION:
+Hide a message within an image file using steganography techniques available in CrypTool Workspace.
+
+AIM:
+To hide and extract a secret message inside an image file.
+
+PROCEDURE:
+1. Open CrypTool Workspace.
+2. Load a cover image.
+3. Enter a secret message.
+4. Embed the message into the image.
+5. Extract and verify the message.
+
+OUTPUT DIAGRAM:
+
++------------------+
+| Cover Image      |
++------------------+
+         |
+         v
++------------------+
+| Secret Message   |
++------------------+
+         |
+         v
++------------------+
+| Steganography    |
+| Embedding        |
++------------------+
+         |
+         v
++------------------+
+| Stego Image      |
++------------------+
+         |
+         v
++------------------+
+| Extraction       |
++------------------+
+         |
+         v
++------------------+
+| Secret Message   |
++------------------+
+
+OUTPUT:
+
+Secret Message: HELLO
+
+Stego Image: Created.
+
+Extracted Message: HELLO
+
+RESULT:
+Thus, image steganography was successfully performed using CrypTool Workspace.
+
+
+==================================================
+QUESTION 30: DIFFIE-HELLMAN KEY EXCHANGE
+==================================================
+
+FULL QUESTION:
+Perform a key exchange using Diffie-Hellman key exchange algorithm using CrypTool Workspace.
+
+AIM:
+To perform a shared secret key exchange using Diffie-Hellman.
+
+PROCEDURE:
+1. Open CrypTool Workspace.
+2. Select Diffie-Hellman algorithm.
+3. Enter public parameters.
+4. Generate private and public keys.
+5. Exchange public keys and calculate the shared secret.
+
+OUTPUT DIAGRAM:
+
++------------------+       +------------------+
+| Alice            |       | Bob              |
+| Private Key = 6  |       | Private Key = 15 |
++------------------+       +------------------+
+         |                           |
+         v                           v
++------------------+       +------------------+
+| Public Key = 8   |       | Public Key = 19  |
++------------------+       +------------------+
+         |                           |
+         +--------- Exchange --------+
+                     |
+                     v
+           +------------------+
+           | Shared Secret    |
+           | Same for both    |
+           +------------------+
+
+OUTPUT:
+
+Alice Shared Secret = 2
+Bob Shared Secret = 2
+
+RESULT:
+Thus, Diffie-Hellman key exchange was successfully performed.
+
+
+==================================================
+QUESTION 31: AES ENCRYPTION
+==================================================
+
+FULL QUESTION:
+Encrypt a plaintext message using AES (Advanced Encryption Standard) with a key of your choice using CrypTool Workspace.
+
+AIM:
+To encrypt plaintext using the AES algorithm.
+
+PROCEDURE:
+1. Open CrypTool Workspace.
+2. Enter a plaintext message.
+3. Select AES encryption.
+4. Enter a valid AES key.
+5. Execute encryption and observe ciphertext.
+
+OUTPUT DIAGRAM:
+
++------------------+
+| Plaintext        |
+| HELLO STUDENT    |
++------------------+
+         |
+         v
++------------------+
+| AES Encryption   |
+| Secret Key       |
++------------------+
+         |
+         v
++------------------+
+| Ciphertext       |
++------------------+
+
+OUTPUT:
+
+Plaintext: HELLO STUDENT
+
+Algorithm: AES
+
+Encrypted Output: Ciphertext generated successfully.
+
+RESULT:
+Thus, plaintext was successfully encrypted using AES.
+
+NOTE:
+AES supports 128, 192 and 256-bit keys. Select a supported mode and padding option in CrypTool.
+
+
+==================================================
+QUESTION 32: FILE HASH USING MD5 AND SHA-256
+==================================================
+
+FULL QUESTION:
+Calculate the hash value of a file using different hash functions (e.g., MD5, SHA-256) and compare the results using CrypTool Workspace.
+
+AIM:
+To calculate and compare file hash values using MD5 and SHA-256.
+
+PROCEDURE:
+1. Open CrypTool Workspace.
+2. Load a file.
+3. Select the MD5 hash function.
+4. Select the SHA-256 hash function.
+5. Compare the generated hashes.
+
+OUTPUT DIAGRAM:
+
++------------------+
+| Input File       |
++------------------+
+         |
+         v
++------------------+
+| Hash Functions   |
++------------------+
+       |       |
+       v       v
++----------+ +----------+
+| MD5      | | SHA-256  |
++----------+ +----------+
+       |       |
+       v       v
++------------------+
+| Hash Comparison  |
++------------------+
+
+OUTPUT:
+
+MD5: 128-bit hash.
+
+SHA-256: 256-bit hash.
+
+RESULT:
+Thus, file hash values were calculated and compared using different hash algorithms.
+
+
+==================================================
+QUESTION 33: RSA / DSA DIGITAL SIGNATURE
+==================================================
+
+FULL QUESTION:
+Create a digital signature for a file using RSA (or DSA) and verify the signature using CrypTool Workspace.
+
+AIM:
+To create and verify a file signature using RSA.
+
+PROCEDURE:
+1. Open CrypTool Workspace.
+2. Select the file.
+3. Generate RSA key pair.
+4. Sign the file with the private key.
+5. Verify the signature with the public key.
+
+OUTPUT DIAGRAM:
+
++------------------+
+| Input File       |
++------------------+
+         |
+         v
++------------------+
+| SHA-256 Hash     |
++------------------+
+         |
+         v
++------------------+
+| RSA Signing      |
++------------------+
+         |
+         v
++------------------+
+| Digital Signature|
++------------------+
+         |
+         v
++------------------+
+| Signature Check  |
++------------------+
+         |
+         v
++------------------+
+| Verification     |
+| Successful       |
++------------------+
+
+RESULT:
+Thus, a file was digitally signed and verified using CrypTool Workspace.
+
+
+==================================================
+QUESTION 34: RSA SIGNATURE WITH PREDEFINED PRIMES
+==================================================
+
+FULL QUESTION:
+Create a digital signature for a file using RSA with predefined prime values and verify the signature using CrypTool Workspace.
+
+AIM:
+To create an RSA digital signature using predefined prime numbers.
+
+PROCEDURE:
+1. Open CrypTool Workspace.
+2. Select two prime numbers.
+3. Generate RSA public and private keys.
+4. Sign the file using the private key.
+5. Verify using the public key.
+
+OUTPUT DIAGRAM:
+
++------------------+
+| Prime Numbers    |
+| p and q          |
++------------------+
+         |
+         v
++------------------+
+| RSA Key Creation |
++------------------+
+         |
+         v
++------------------+
+| File Hash        |
++------------------+
+         |
+         v
++------------------+
+| RSA Signature    |
+| Private Key      |
++------------------+
+         |
+         v
++------------------+
+| Verification     |
+| Public Key       |
++------------------+
+         |
+         v
++------------------+
+| Valid Signature  |
++------------------+
+
+OUTPUT:
+
+RSA Key Pair: Generated.
+
+File Signature: Created.
+
+Verification: Successful.
+
+RESULT:
+Thus, RSA digital signature was created using predefined prime values and verified successfully.
+
+NOTE:
+Use small predefined primes only for a classroom demonstration. Production RSA keys must use large secure primes.
+
+
+==================================================
+QUESTION 35: PLAYFAIR CIPHER
+==================================================
+
+FULL QUESTION:
+Use CrypTool 2 to implement the Playfair cipher to encrypt the message "MEET AT THE TOGA PARTY" and decrypt the message.
+
+AIM:
+To encrypt and decrypt the given plaintext using Playfair cipher.
+
+PROCEDURE:
+1. Open CrypTool 2.
+2. Select Playfair cipher.
+3. Enter the key.
+4. Enter MEET AT THE TOGA PARTY.
+5. Encrypt and decrypt the message.
+
+KEY:
+MONARCHY
+
+PLAINTEXT:
+MEET AT THE TOGA PARTY
+
+OUTPUT DIAGRAM:
+
++--------------------------+
+| Plaintext                |
+| MEET AT THE TOGA PARTY   |
++--------------------------+
+             |
+             v
++--------------------------+
+| Playfair Encryption      |
+| Key: MONARCHY            |
++--------------------------+
+             |
+             v
++--------------------------+
+| Ciphertext               |
+| Generated by CrypTool    |
++--------------------------+
+             |
+             v
++--------------------------+
+| Playfair Decryption      |
++--------------------------+
+             |
+             v
++--------------------------+
+| Original Plaintext       |
++--------------------------+
+
+RESULT:
+Thus, the given message was encrypted and decrypted using Playfair cipher.
+
+NOTE:
+The question does not specify a key. MONARCHY is used as a demonstration key. Enter the same key for decryption.
+
+
+==================================================
+QUESTION 36: HILL CIPHER
+==================================================
+
+FULL QUESTION:
+Use CrypTool 2 to implement the Hill cipher to encrypt the message "HARDWORK GIVES SUCCESS" and decrypt the message.
+
+AIM:
+To perform encryption and decryption using Hill cipher.
+
+PROCEDURE:
+1. Open CrypTool 2.
+2. Select Hill cipher.
+3. Enter the plaintext.
+4. Enter a valid invertible key matrix.
+5. Encrypt and decrypt the message.
+
+KEY MATRIX:
+
+3  3
+2  5
+
+OUTPUT DIAGRAM:
+
++--------------------------+
+| Plaintext                |
+| HARDWORK GIVES SUCCESS   |
++--------------------------+
+             |
+             v
++--------------------------+
+| Hill Cipher              |
+| Key Matrix               |
+| 3  3                     |
+| 2  5                     |
++--------------------------+
+             |
+             v
++--------------------------+
+| Ciphertext               |
++--------------------------+
+             |
+             v
++--------------------------+
+| Hill Decryption          |
++--------------------------+
+             |
+             v
++--------------------------+
+| Original Plaintext       |
++--------------------------+
+
+RESULT:
+Thus, Hill cipher encryption and decryption were demonstrated using CrypTool 2.
+
+NOTE:
+The question does not specify a key matrix. The given matrix is invertible modulo 26. Padding and spaces must follow the selected component's settings.
+
+
+==================================================
+QUESTION 37: ASYMMETRIC KEY CRYPTOGRAPHIC ALGORITHMS
+==================================================
+
+FULL QUESTION:
+Perform asymmetric key cryptographic algorithms using CrypTool Workspace.
+
+AIM:
+To demonstrate asymmetric encryption and decryption.
+
+PROCEDURE:
+1. Open CrypTool Workspace.
+2. Select RSA algorithm.
+3. Generate a public and private key pair.
+4. Encrypt the message using the public key.
+5. Decrypt using the private key.
+
+OUTPUT DIAGRAM:
+
++------------------+
+| Plaintext        |
++------------------+
+         |
+         v
++------------------+
+| RSA Encryption   |
+| Public Key       |
++------------------+
+         |
+         v
++------------------+
+| Ciphertext       |
++------------------+
+         |
+         v
++------------------+
+| RSA Decryption   |
+| Private Key      |
++------------------+
+         |
+         v
++------------------+
+| Original Message |
++------------------+
+
+RESULT:
+Thus, asymmetric key cryptography was performed using CrypTool Workspace.
+
+
+==================================================
+QUESTION 38: TEXT STEGANOGRAPHY
+==================================================
+
+FULL QUESTION:
+Perform Text Steganography using CrypTool 2 for the given text:
+
+"This was also part of the routine. A few seconds of hesitation to see if something else would be added to the order before demurring and saying that would be all".
+
+AIM:
+To hide a secret message inside the given cover text using steganography.
+
+PROCEDURE:
+1. Open CrypTool 2.
+2. Select text steganography.
+3. Enter the given cover text.
+4. Enter the secret message.
+5. Hide and extract the message.
+
+COVER TEXT:
+
+This was also part of the routine. A few seconds of hesitation to see if something else would be added to the order before demurring and saying that would be all.
+
+OUTPUT DIAGRAM:
+
++----------------------+
+| Cover Text           |
++----------------------+
+           |
+           v
++----------------------+
+| Secret Message       |
++----------------------+
+           |
+           v
++----------------------+
+| Text Steganography   |
+| Embedding            |
++----------------------+
+           |
+           v
++----------------------+
+| Stego Text           |
++----------------------+
+           |
+           v
++----------------------+
+| Message Extraction   |
++----------------------+
+           |
+           v
++----------------------+
+| Secret Message       |
++----------------------+
+
+OUTPUT:
+
+Cover Text: Given paragraph.
+
+Stego Text: Generated successfully.
+
+Extracted Message: Same as the entered secret message.
+
+RESULT:
+Thus, text steganography was demonstrated using the given cover text.
+
+NOTE:
+The question does not specify the secret message. Enter a sample message such as HELLO for the demonstration.
+
+
+==================================================
+QUESTION 39: RSA DIGITAL SIGNATURE
+==================================================
+
+FULL QUESTION:
+Use CrypTool 2 to create a digital signature for a message using RSA and a hashing algorithm of your choice. Verify the digital signature using the public key.
+
+AIM:
+To create and verify a digital signature using RSA and a hash function.
+
+PROCEDURE:
+1. Open CrypTool 2.
+2. Enter a message.
+3. Generate an RSA key pair.
+4. Sign the message using SHA-256 and the private key.
+5. Verify the signature using the public key.
+
+OUTPUT DIAGRAM:
+
++------------------+
+| Message          |
++------------------+
+         |
+         v
++------------------+
+| SHA-256          |
++------------------+
+         |
+         v
++------------------+
+| RSA Signing      |
+| Private Key      |
++------------------+
+         |
+         v
++------------------+
+| Signature        |
++------------------+
+         |
+         v
++------------------+
+| Verification     |
+| Public Key       |
++------------------+
+         |
+         v
++------------------+
+| Valid            |
++------------------+
+
+RESULT:
+Thus, RSA digital signature was created and verified successfully.
+
+
+==================================================
+QUESTION 40: MODIFIED CAESAR CIPHER
+==================================================
+
+FULL QUESTION:
+Using CrypTool 2, implement the Modified Caesar cipher for encrypting and decrypting a plaintext message. Encrypt the message "CRYPTOGRAPHY FUNCTIONS" with a shift of 3 and decrypt the ciphertext back to plaintext using the Caesar cipher.
+
+AIM:
+To encrypt and decrypt the given message using Caesar cipher with shift 3.
+
+PROCEDURE:
+1. Open CrypTool 2.
+2. Select Caesar cipher.
+3. Enter CRYPTOGRAPHY FUNCTIONS.
+4. Set the shift value to 3.
+5. Encrypt and decrypt the message.
+
+OUTPUT DIAGRAM:
+
++--------------------------+
+| Plaintext                |
+| CRYPTOGRAPHY FUNCTIONS   |
++--------------------------+
+             |
+             v
++--------------------------+
+| Caesar Encryption       |
+| Shift = 3               |
++--------------------------+
+             |
+             v
++--------------------------+
+| Ciphertext               |
+| FUBSWRJUDSKB IXQFWLRQV   |
++--------------------------+
+             |
+             v
++--------------------------+
+| Caesar Decryption       |
++--------------------------+
+             |
+             v
++--------------------------+
+| CRYPTOGRAPHY FUNCTIONS  |
++--------------------------+
+
+RESULT:
+Thus, the given plaintext was successfully encrypted and decrypted using Caesar cipher.
+
+
+==================================================
+QUESTION 41: HILL CIPHER
+==================================================
+
+FULL QUESTION:
+Use CrypTool 2 to implement the Hill cipher to encrypt the message "CIPHER BLOCK CHAINING" and decrypt the message.
+
+AIM:
+To encrypt and decrypt the given message using Hill cipher.
+
+PROCEDURE:
+1. Open CrypTool 2.
+2. Select Hill cipher.
+3. Enter CIPHER BLOCK CHAINING.
+4. Enter an invertible key matrix.
+5. Encrypt and decrypt the message.
+
+KEY MATRIX:
+
+3  3
+2  5
+
+OUTPUT DIAGRAM:
+
++--------------------------+
+| Plaintext                |
+| CIPHER BLOCK CHAINING    |
++--------------------------+
+             |
+             v
++--------------------------+
+| Hill Encryption          |
+| Key Matrix               |
++--------------------------+
+             |
+             v
++--------------------------+
+| Ciphertext               |
++--------------------------+
+             |
+             v
++--------------------------+
+| Hill Decryption          |
++--------------------------+
+             |
+             v
++--------------------------+
+| Original Plaintext       |
++--------------------------+
+
+RESULT:
+Thus, Hill cipher encryption and decryption were successfully demonstrated.
+
+NOTE:
+The key matrix is a demonstration choice because the question does not specify one. Use identical padding and alphabet settings for encryption and decryption.
+
+
+==================================================
+QUESTION 42: MAC AND SHA COMPARISON
+==================================================
+
+FULL QUESTION:
+Using CrypTool 2, compare the MAC and SHA for the given string "DIFFIE HELLMAN KEY EXCHANGE" using Hash functions.
+
+AIM:
+To compare SHA and MAC values for a given message.
+
+PROCEDURE:
+1. Open CrypTool 2.
+2. Enter the given message.
+3. Select SHA-256.
+4. Select HMAC-SHA-256 and enter a key.
+5. Compare the generated outputs.
+
+OUTPUT DIAGRAM:
+
++----------------------------+
+| DIFFIE HELLMAN KEY EXCHANGE|
++----------------------------+
+              |
+       +------+------+
+       |             |
+       v             v
++------------+ +-------------+
+| SHA-256    | | HMAC-SHA256 |
++------------+ +-------------+
+       |             |
+       v             v
++------------+ +-------------+
+| Hash Value | | MAC Value   |
++------------+ +-------------+
+
+OUTPUT:
+
+SHA-256: 256-bit hash.
+
+HMAC-SHA-256: 256-bit authentication code.
+
+RESULT:
+Thus, SHA and MAC values were generated and compared successfully.
+
+
+==================================================
+QUESTION 43: RSA KEY GENERATION AND ENCRYPTION
+==================================================
+
+FULL QUESTION:
+Using CrypTool 2, generate an RSA key pair with primality concept. Encrypt a message with the public key and decrypt it with the private key.
+
+AIM:
+To generate RSA keys using prime numbers and perform encryption and decryption.
+
+PROCEDURE:
+1. Open CrypTool 2.
+2. Select two prime numbers.
+3. Generate RSA public and private keys.
+4. Encrypt a message using the public key.
+5. Decrypt using the private key.
+
+OUTPUT DIAGRAM:
+
++------------------+
+| Prime Numbers    |
+| p and q          |
++------------------+
+         |
+         v
++------------------+
+| RSA Key Generation|
++------------------+
+         |
+         v
++------------------+
+| Public Key       |
+| Private Key      |
++------------------+
+         |
+         v
++------------------+
+| Message          |
++------------------+
+         |
+         v
++------------------+
+| RSA Encryption   |
++------------------+
+         |
+         v
++------------------+
+| Ciphertext       |
++------------------+
+         |
+         v
++------------------+
+| RSA Decryption   |
++------------------+
+         |
+         v
++------------------+
+| Original Message |
++------------------+
+
+RESULT:
+Thus, RSA key generation, encryption and decryption were performed successfully.
+
+
+==================================================
+QUESTION 44: SYMMETRIC KEY CRYPTOGRAPHIC ALGORITHMS
+==================================================
+
+FULL QUESTION:
+Perform symmetric key cryptographic algorithms using CrypTool Workspace.
+
+AIM:
+To demonstrate symmetric key encryption and decryption.
+
+PROCEDURE:
+1. Open CrypTool Workspace.
+2. Select AES encryption.
+3. Enter a plaintext message.
+4. Enter a secret key.
+5. Decrypt using the same secret key.
+
+OUTPUT DIAGRAM:
+
++------------------+
+| Plaintext        |
+| HELLO STUDENT    |
++------------------+
+         |
+         v
++------------------+
+| AES Encryption   |
+| Secret Key       |
++------------------+
+         |
+         v
++------------------+
+| Ciphertext       |
++------------------+
+         |
+         v
++------------------+
+| AES Decryption   |
+| Same Secret Key  |
++------------------+
+         |
+         v
++------------------+
+| HELLO STUDENT    |
++------------------+
+
+RESULT:
+Thus, symmetric key encryption and decryption were successfully performed using AES.
+
+
+==================================================
+QUESTION 45: RSA KEY GENERATION, FILE SIGNING AND
+SIGNATURE VERIFICATION
+==================================================
+
+FULL QUESTION:
+Write a Python program to:
+
+a) Generate RSA (or DSA) key pair.
+b) Sign a file.
+c) Verify the signature.
+
+Repeat the same steps using CrypTool and compare hash values and signatures.
+
+AIM:
+To generate RSA keys, digitally sign a file and verify the signature using Python and CrypTool.
+
+PROCEDURE:
+1. Generate an RSA public and private key pair.
+2. Create a text file.
+3. Sign the file using the private key.
+4. Verify the signature using the public key.
+5. Repeat the process in CrypTool and compare the results.
+
+PROGRAM:
+
+First install the library:
+
+pip install cryptography
+
+Python program:
+
+from cryptography.hazmat.primitives.asymmetric import rsa
+from cryptography.hazmat.primitives import hashes
+from cryptography.hazmat.primitives.asymmetric import padding
+
+# Generate RSA keys
+
+private_key = rsa.generate_private_key(
+    public_exponent=65537,
+    key_size=2048
+)
+
+public_key = private_key.public_key()
+
+# Create file
+
+with open("message.txt", "w") as f:
+    f.write("Hello Applied Cryptography")
+
+# Read file
+
+with open("message.txt", "rb") as f:
+    data = f.read()
+
+# Sign file
+
+signature = private_key.sign(
+    data,
+    padding.PSS(
+        mgf=padding.MGF1(hashes.SHA256()),
+        salt_length=padding.PSS.MAX_LENGTH
+    ),
+    hashes.SHA256()
+)
+
+# Verify signature
+
+try:
+
+    public_key.verify(
+        signature,
+        data,
+        padding.PSS(
+            mgf=padding.MGF1(hashes.SHA256()),
+            salt_length=padding.PSS.MAX_LENGTH
+        ),
+        hashes.SHA256()
+    )
+
+    print("Signature Verified Successfully")
+
+except Exception:
+
+    print("Signature Verification Failed")
 
 
 OUTPUT:
 
-Suspicious Access: 192.168.1.3
+Signature Verified Successfully
 
-Failed Login Analysis
 
-192.168.1.2 : 3
+CRYPTOOL WORKSPACE COMPARISON:
 
-ALERT: Brute Force Attack Detected
+1. Open CrypTool Workspace.
+2. Generate RSA public and private keys.
+3. Load the same message.txt file.
+4. Create the SHA-256 hash.
+5. Sign and verify the file.
+6. Compare the hash and signature results.
 
+OUTPUT DIAGRAM:
+
++------------------------+
+| Input File             |
+| message.txt            |
++------------------------+
+            |
+            v
++------------------------+
+| SHA-256 Hash           |
++------------------------+
+            |
+            v
++------------------------+
+| RSA Digital Signing    |
+| Private Key            |
++------------------------+
+            |
+            v
++------------------------+
+| Digital Signature      |
++------------------------+
+            |
+            v
++------------------------+
+| RSA Verification       |
+| Public Key             |
++------------------------+
+            |
+            v
++------------------------+
+| Signature Verified     |
++------------------------+
+
+COMPARISON:
+
+Python:
+RSA key pair generated.
+SHA-256 used.
+File signature verified.
+
+CrypTool:
+RSA key pair generated.
+SHA-256 used.
+File signature verified.
+
+Note:
+The exact hash should match if the same file bytes are used. The signature bytes may differ because RSA-PSS uses random salt.
 
 RESULT:
-Thus, server logs were filtered and correlated to identify possible security incidents.
-
+Thus, RSA key generation, file signing and signature verification were successfully implemented using Python and CrypTool.
 
 ==================================================
-END OF ALL 30 SYSTEM SECURITY LAB PROGRAMS
+END OF ALL 45 APPLIED CRYPTOGRAPHY QUESTIONS
 ==================================================
